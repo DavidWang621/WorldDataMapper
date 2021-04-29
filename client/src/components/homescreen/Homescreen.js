@@ -1,6 +1,7 @@
 import Logo 							from '../navbar/Logo';
 import Login 							from '../modals/Login';
 import Delete 							from '../modals/Delete';
+import UpdateAccount					from '../modals/UpdateAccount';
 import MainContents 					from '../main/MainContents';
 import CreateAccount 					from '../modals/CreateAccount';
 import NavbarOptions 					from '../navbar/NavbarOptions';
@@ -41,6 +42,7 @@ const Homescreen = (props) => {
 	const [showDelete, toggleShowDelete] 	= useState(false);
 	const [showLogin, toggleShowLogin] 		= useState(false);
 	const [showCreate, toggleShowCreate] 	= useState(false);
+	const [showUpdate, toggleShowUpdate]	= useState(false);
 	const [canUndo, setCanUndo] = useState(props.tps.hasTransactionToUndo());
 	const [canRedo, setCanRedo] = useState(props.tps.hasTransactionToRedo());
 
@@ -207,19 +209,29 @@ const Homescreen = (props) => {
 	const setShowLogin = () => {
 		toggleShowDelete(false);
 		toggleShowCreate(false);
+		toggleShowUpdate(false);
 		toggleShowLogin(!showLogin);
 	};
 
 	const setShowCreate = () => {
 		toggleShowDelete(false);
 		toggleShowLogin(false);
+		toggleShowUpdate(false);
 		toggleShowCreate(!showCreate);
 	};
 
 	const setShowDelete = () => {
 		toggleShowCreate(false);
 		toggleShowLogin(false);
-		toggleShowDelete(!showDelete)
+		toggleShowUpdate(false);
+		toggleShowDelete(!showDelete);
+	};
+
+	const setShowUpdate = () => {
+		toggleShowCreate(false);
+		toggleShowLogin(false);
+		toggleShowDelete(false);
+		toggleShowUpdate(!showUpdate);	
 	};
 	
 	const sort = (criteria) => {
@@ -246,6 +258,7 @@ const Homescreen = (props) => {
 							fetchUser={props.fetchUser} 	auth={auth} 
 							setShowCreate={setShowCreate} 	setShowLogin={setShowLogin}
 							reloadTodos={refetch} 			setActiveList={loadTodoList}
+							user={props.user}				setShowUpdate={setShowUpdate}
 						/>
 					</ul>
 				</WNavbar>
@@ -294,7 +307,11 @@ const Homescreen = (props) => {
 			}
 
 			{
-				showLogin && (<Login fetchUser={props.fetchUser} reloadTodos={refetch}setShowLogin={setShowLogin} />)
+				showLogin && (<Login fetchUser={props.fetchUser} reloadTodos={refetch} setShowLogin={setShowLogin} />)
+			}
+
+			{
+				showUpdate && (<UpdateAccount fetchUser={props.fetchUser} setShowUpdate={setShowUpdate} user={props.user}/>)
 			}
 
 		</WLayout>

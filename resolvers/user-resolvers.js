@@ -82,6 +82,13 @@ module.exports = {
 			res.clearCookie('refresh-token');
 			res.clearCookie('access-token');
 			return true;
+		}, 
+		update: async (_, args, { res }) => {
+			const { email, password, firstName, lastName, oldEmail } = args;
+			const hashed = await bcrypt.hash(password, 10);
+			const initials = `${firstName[0]}.${lastName[0]}.`;
+			const user = await User.updateOne({email: oldEmail}, { email: email, password: hashed, firstName: firstName, lastName: lastName, initials: initials });
+			return user;
 		}
 	}
 }
