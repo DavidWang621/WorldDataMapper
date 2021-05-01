@@ -11,21 +11,18 @@ export const GET_DB_USER = gql`
 	}
 `;
 
-export const GET_DB_TODOS = gql`
-	query GetDBTodos {
-		getAllTodos {
+export const GET_DB_MAPS = gql`
+	query GetDBMaps {
+		getAllMaps {
 			_id
 			name
 			owner
-			items {
+			regions {
 				_id
-				description
-				due_date
-				assigned_to
-				completed
+				capital
+				leader
+				landmarks
 			}
-			sortRule
-			sortDirection
 		}
 	}
 `;

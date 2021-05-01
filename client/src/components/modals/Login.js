@@ -1,6 +1,7 @@
 import React, { useState } 	from 'react';
 import { LOGIN } 			from '../../cache/mutations';
 import { useMutation }    	from '@apollo/client';
+import { useHistory }		from 'react-router-dom';
 
 import { WModal, WMHeader, WMMain, WMFooter, WButton, WInput } from 'wt-frontend';
 
@@ -17,6 +18,8 @@ const Login = (props) => {
 		setInput(updated);
 	}
 
+	let history = useHistory();
+
 	const handleLogin = async (e) => {
 
 		const { loading, error, data } = await Login({ variables: { ...input } });
@@ -27,9 +30,9 @@ const Login = (props) => {
 		}
 		if (data) {
 			props.fetchUser();
-			props.reloadTodos();
 			toggleLoading(false)
 			props.setShowLogin(false)
+			history.push("/maps");
 		};
 	};
 

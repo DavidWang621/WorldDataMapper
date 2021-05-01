@@ -242,3 +242,44 @@ html {
     margin-left: 35%;
     margin-right: 35%;
 }
+
+.mapTitleCol {
+    text-align: center;
+    margin-top: 5%;
+    width: 70%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.mapTitleCol2 {
+    text-align: center;
+    width: 70%;
+    height: 5%;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+}
+
+.mapTableContent {
+    display: block;
+    float: left;
+    margin-left: 15%;
+    width: 35%;
+    height: 65%;
+}
+
+.rightSide {
+    float: right;
+    width: 35%;
+    margin-right: 15%;
+    height: 65%;
+}
+
+.mapGlobe {
+    width: 100%;
+    height: 94%;
+}
+
+.mapDeleteButton {
+    float: right;
+}

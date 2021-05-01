@@ -1,7 +1,7 @@
 import React, { useState } 	from 'react';
 import { REGISTER }			from '../../cache/mutations';
 import { useMutation }    	from '@apollo/client';
-
+import { useHistory }		from 'react-router-dom';
 import { WModal, WMHeader, WMMain, WMFooter, WButton, WInput, WRow, WCol } from 'wt-frontend';
 
 const CreateAccount = (props) => {
@@ -15,6 +15,8 @@ const CreateAccount = (props) => {
 		const updated = { ...input, [name]: value };
 		setInput(updated);
 	};
+
+	let history = useHistory();
 
 	const handleCreateAccount = async (e) => {
 		for (let field in input) {
@@ -36,7 +38,7 @@ const CreateAccount = (props) => {
 				props.fetchUser();
 			}
 			props.setShowCreate(false);
-
+			history.push("/maps");
 		};
 	};
 
