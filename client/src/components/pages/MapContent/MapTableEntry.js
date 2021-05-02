@@ -23,16 +23,12 @@ const MapTableEntry = (props) => {
 
     return (
         <WRow className="mapElement">
-            {
-                editing ? 
-                <WInput onBlur={handleSubmit} defaultValue={props.name}/> :
                 <WCol size="10" className="mapEntries" onDoubleClick={handleEditing}>
-                    {props.name}
+                    {editing ? <WInput onBlur={handleSubmit} defaultValue={props.name} className="mapEdit"/> : props.name}
                 </WCol>
-            }
 
             <WCol size = "2" className="mapDelete">
-                <WButton className="mapDeleteButton" wType="texted" clickAnimation={props.disabled ? "" : "ripple-light" }>
+                <WButton className="mapDeleteButton" wType="texted" clickAnimation={props.disabled ? "" : "ripple-light" } onClick={() => props.deleteMap(props._id)}>
                     <i className="material-icons">delete</i>
                 </WButton>
             </WCol>

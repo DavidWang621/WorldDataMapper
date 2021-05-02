@@ -11,6 +11,7 @@ const MapTableContents = (props) => {
                     <MapTableEntry
                         name={entry.name}   _id={entry._id}
                         key={entry._id}     updateMap={props.updateMap}
+                        deleteMap={props.deleteMap}
                     />
                 ))
             }

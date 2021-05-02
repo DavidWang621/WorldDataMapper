@@ -98,9 +98,17 @@ const Maps = (props) => {
 	}
 
 	const updateMapField = async (_id, value) => {
-		const { data } = await updateMap({ variables : { _id: _id, value: value}});
+		const { data } = await updateMap({ variables : { _id: _id, value: value } });
 		if (data) {
-			console.log("Updated map")
+			console.log("Updated map");
+		}
+		refetch();
+	}
+
+	const deleteMapField = async (_id) => {
+		const { data } = await deleteMap({ variables: { _id: _id } });
+		if (data) {
+			console.log("Deleted map");
 		}
 		refetch();
 	}
@@ -133,6 +141,7 @@ const Maps = (props) => {
             <div className="mapTableContent">
 				<MapTableContent 
 					maplist={simpMapLists}		updateMap={updateMapField}
+					deleteMap={deleteMapField}
 				/>
 			</div>
             <div className="rightSide">
