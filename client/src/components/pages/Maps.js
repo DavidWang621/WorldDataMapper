@@ -86,7 +86,7 @@ const Maps = (props) => {
 	const createNewMap = async () => {
 		let list = {
 			_id: '',
-			name: 'untitled',
+			name: 'Untitled',
 			owner: props.user._id,
 			regions: []
 		}

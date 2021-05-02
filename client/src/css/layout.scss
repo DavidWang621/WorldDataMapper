@@ -280,6 +280,24 @@ html {
     height: 94%;
 }
 
+.mapElement:hover {
+    background-color: lightpink;
+}
+
+.mapEntries {
+    margin-left: 5%;
+    display: flex;
+    align-items: center;
+    margin-top: 3%;
+    margin-bottom: 3%;
+}
+
+.mapDelete {
+    display: flex;
+    align-items: center;
+    margin-left: 35%;
+}
+
 .mapDeleteButton {
     float: right;
 }
