@@ -10,6 +10,7 @@ const MapTableContents = (props) => {
                 props.maplist.map(entry => (
                     <MapTableEntry
                         name={entry.name}   _id={entry._id}
+                        key={entry._id}     updateMap={props.updateMap}
                     />
                 ))
             }

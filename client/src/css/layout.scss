@@ -301,3 +301,8 @@ html {
 .mapDeleteButton {
     float: right;
 }
+
+.mapTableContent {
+    overflow-y: scroll;
+    scrollbar-width: thin;
+}

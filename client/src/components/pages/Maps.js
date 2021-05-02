@@ -94,6 +94,15 @@ const Maps = (props) => {
 		if (data) {
 			console.log("Added new map");
 		}
+		refetch();
+	}
+
+	const updateMapField = async (_id, value) => {
+		const { data } = await updateMap({ variables : { _id: _id, value: value}});
+		if (data) {
+			console.log("Updated map")
+		}
+		refetch();
 	}
 
     return (
@@ -123,7 +132,7 @@ const Maps = (props) => {
             <div className="mapTitleCol2"></div>
             <div className="mapTableContent">
 				<MapTableContent 
-					maplist={simpMapLists}
+					maplist={simpMapLists}		updateMap={updateMapField}
 				/>
 			</div>
             <div className="rightSide">

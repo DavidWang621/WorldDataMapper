@@ -64,8 +64,8 @@ export const DELETE_MAP = gql`
 `;
 
 export const UPDATE_MAP = gql`
-	mutation UpdateMap($_id: String!, $field: String!, $value: String!) {
-		updateMap(_id: $_id, field: $field, value: $value)
+	mutation UpdateMap($_id: String!, $value: String!) {
+		updateMap(_id: $_id, value: $value)
 	}
 `;
 
