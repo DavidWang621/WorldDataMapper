@@ -49,6 +49,7 @@ export const ADD_MAP = gql`
 			owner
 			regions {
 				_id
+				name
 				capital
 				leader
 				landmarks

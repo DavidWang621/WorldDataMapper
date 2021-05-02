@@ -1,6 +1,7 @@
 import React, { useState }                              from 'react';
 import { WNavItem, WInput, WButton, WRow, WCol }        from 'wt-frontend';
-import { useHistory }                                   from 'react-router-dom';
+import { Switch, useHistory, Route }                    from 'react-router-dom';
+import RegionSpreadsheet                                from './RegionSpreadsheet'
 
 const MapTableEntry = (props) => {
     const [editing, toggleEditing] = useState(false);
@@ -18,12 +19,16 @@ const MapTableEntry = (props) => {
         const { name, value } = e.target;
         console.log(value);
         props.updateMap(props._id, value);
-        // history.go(0);
+    }
+
+    const selectMap = (e) => {
+        props.handleSelectMap(props._id);
+        history.push("/region/:id");
     }
 
     return (
         <WRow className="mapElement">
-                <WCol size="10" className="mapEntries" onDoubleClick={handleEditing}>
+                <WCol size="10" className="mapEntries" onDoubleClick={handleEditing} onClick={selectMap}>
                     {editing ? <WInput onBlur={handleSubmit} defaultValue={props.name} className="mapEdit"/> : props.name}
                 </WCol>
 

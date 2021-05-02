@@ -10,6 +10,7 @@ const typeDefs = gql `
 	}
 	type Region {
 		_id: String!
+		name: String!
 		capital: String!
 		leader: String!
 		landmarks: [String]
@@ -32,6 +33,7 @@ const typeDefs = gql `
 	}
 	input RegionInput {
 		_id: String
+		name: String
 		Capital: String
 		leader: String
 		landmarks: [String]

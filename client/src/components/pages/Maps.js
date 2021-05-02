@@ -3,7 +3,7 @@ import globe 							from '../../pictures/globeRed.jpg';
 import Login 							from '../modals/Login';
 import Delete 							from '../modals/Delete';
 import UpdateAccount					from '../modals/UpdateAccount';
-import CreateAccount 					from '../modals/CreateAccount';
+import CreateAccount 					from '../modals/CreateAccount';						
 import NavbarOptions 					from '../navbar/NavbarOptions';
 import * as mutations 					from '../../cache/mutations';
 import MapTableContent					from './MapContent/MapTableContents';
@@ -11,6 +11,7 @@ import { GET_DB_MAPS } 					from '../../cache/queries';
 import React, { useState } 				from 'react';
 import { useMutation, useQuery } 		from '@apollo/client';
 import { WNavbar, WSidebar, WNavItem } 	from 'wt-frontend';
+import { Route }						from 'react-router-dom';
 import { WLayout, WLHeader, WLMain, WLSide, WButton } from 'wt-frontend';
 import { WRow, WCol } from 'wt-frontend';
 import { UpdateListField_Transaction, 
@@ -25,7 +26,6 @@ const Maps = (props) => {
 	let maplists = [];
 	let simpMapLists = [];
 	// const [activeList, setActiveList]		= useState({});
-	const [showDelete, toggleShowDelete] 	= useState(false);
 	const [showLogin, toggleShowLogin] 		= useState(false);
 	const [showCreate, toggleShowCreate] 	= useState(false);
 	const [showUpdate, toggleShowUpdate]	= useState(false);
@@ -56,30 +56,20 @@ const Maps = (props) => {
 	const [updateMap]			= useMutation(mutations.UPDATE_MAP);
 
     const setShowLogin = () => {
-		toggleShowDelete(false);
 		toggleShowCreate(false);
 		toggleShowUpdate(false);
 		toggleShowLogin(!showLogin);
 	};
 
 	const setShowCreate = () => {
-		toggleShowDelete(false);
 		toggleShowLogin(false);
 		toggleShowUpdate(false);
 		toggleShowCreate(!showCreate);
 	};
 
-	const setShowDelete = () => {
-		toggleShowCreate(false);
-		toggleShowLogin(false);
-		toggleShowUpdate(false);
-		toggleShowDelete(!showDelete);
-	};
-
 	const setShowUpdate = () => {
 		toggleShowCreate(false);
 		toggleShowLogin(false);
-		toggleShowDelete(false);
 		toggleShowUpdate(!showUpdate);	
 	};
 
@@ -113,6 +103,17 @@ const Maps = (props) => {
 		refetch();
 	}
 
+	let tempRegion = [];
+
+	const selectMap = async (_id) => {
+		for (let i = 0; i < maplists.length; i++) {
+			if (maplists[i]._id === _id) {
+				tempRegion = maplists[i];
+			}
+		}
+		props.region(tempRegion);
+	}
+
     return (
 		<WLayout wLayout="header-side">
 			<WLHeader>
@@ -141,7 +142,7 @@ const Maps = (props) => {
             <div className="mapTableContent">
 				<MapTableContent 
 					maplist={simpMapLists}		updateMap={updateMapField}
-					deleteMap={deleteMapField}
+					deleteMap={deleteMapField}		handleSelectMap={selectMap}
 				/>
 			</div>
             <div className="rightSide">

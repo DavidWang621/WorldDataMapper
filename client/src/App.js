@@ -1,9 +1,10 @@
-import React 			from 'react';
-import Homescreen 		from './components/homescreen/Homescreen';
-import Maps				from './components/pages/Maps';
-import { useQuery } 	from '@apollo/client';
-import * as queries 	from './cache/queries';
-import { jsTPS } 		from './utils/jsTPS';
+import React, {useState}	from 'react';
+import Homescreen 			from './components/homescreen/Homescreen';
+import Maps					from './components/pages/Maps';
+import RegionSpreadsheet	from './components/pages/MapContent/RegionSpreadsheet';
+import { useQuery } 		from '@apollo/client';
+import * as queries 		from './cache/queries';
+import { jsTPS } 			from './utils/jsTPS';
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
  
 const App = () => {
@@ -18,6 +19,13 @@ const App = () => {
 		let { getCurrentUser } = data;
 		if(getCurrentUser !== null) { user = getCurrentUser; }
     }
+
+	const [regionName, getRegionName] = useState([]);
+
+	const changeRegion = (region) => {
+		getRegionName(region);
+	}
+
 	return(
 		<BrowserRouter>
 			<Switch>
@@ -26,7 +34,7 @@ const App = () => {
 					path="/home" 
 					name="home" 
 					render={() => 
-						<Homescreen tps={transactionStack} fetchUser={refetch} user={user} refreshTps={refreshTps}/>
+						<Homescreen tps={transactionStack} fetchUser={refetch} user={user}/>
 					} 
 				>
 				</Route>
@@ -34,8 +42,16 @@ const App = () => {
 					path="/maps" 
 					name="maps" 
 					render={() => 
-						<Maps tps={transactionStack} fetchUser={refetch} user={user} refreshTps={refreshTps}/>
+						<Maps tps={transactionStack} fetchUser={refetch} user={user} refreshTps={refreshTps} region={changeRegion}/>
 					} 
+				>
+				</Route>
+				<Route
+					path="/region/:id"
+					name="region"
+					render={() => 
+						<RegionSpreadsheet user={user} fetchUser={refetch}/>
+					}
 				>
 				</Route>
 			</Switch>

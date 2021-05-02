@@ -6,6 +6,10 @@ const regionSchema = new Schema(
 			type: ObjectId,
 			required: true
 		},
+		name: {
+			type: String,
+			required: true
+		},
 		capital: {
 			type: String,
 			required: true
