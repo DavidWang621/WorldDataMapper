@@ -44,12 +44,12 @@ const RegionSpreadsheet = (props) => {
     const addSubRegion = async () => {
         let region = {
             _id: '',
-            name: 'untitled',
-            capital: 'untitled',
-            leader: 'untitled',
+            name: 'Untitled',
+            capital: 'Untitled',
+            leader: 'Untitled',
             landmarks: []
         }
-        const { data } = await addRegion({ variables: { region: region, _id: props.region._id, index: -1 }, refetchQueries: [{ query: GET_DB_MAPS}]});
+        const { data } = await addRegion({ variables: { region: region, _id: props.region._id, index: -1 }});
 		if (data) {
 			console.log("Added new region");
 		}
@@ -65,7 +65,7 @@ const RegionSpreadsheet = (props) => {
     }
 
     const printRegion = () => {
-        console.log(props.region);
+        console.log(regions);
     }
 
     return (
@@ -110,7 +110,7 @@ const RegionSpreadsheet = (props) => {
                     </div>
                 </div>
             </div>
-            <WRow className="topLabel" className="labels">
+            <WRow className="topLabel labels">
                 <WCol size="2" className="topArea">
                     Name
                 </WCol>

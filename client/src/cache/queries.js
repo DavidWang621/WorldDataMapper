@@ -19,6 +19,7 @@ export const GET_DB_MAPS = gql`
 			owner
 			regions {
 				_id
+				name
 				capital
 				leader
 				landmarks

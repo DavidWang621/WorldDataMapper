@@ -27,11 +27,20 @@ const MapTableEntry = (props) => {
         history.push("/maps/region");
     }
 
+    const editMap = () => {
+        toggleEditing(!editing);
+    }
+
     return (
         <WRow className="mapElement">
-                <WCol size="10" className="mapEntries" onDoubleClick={handleEditing} onClick={selectMap}>
-                    {editing ? <WInput onBlur={handleSubmit} defaultValue={props.name} className="mapEdit"/> : props.name}
-                </WCol>
+            <WCol size="1" className="mapEditBut">
+                <WButton className="mapEditButton" wType="texted" clickAnimation={props.disabled ? "" : "ripple-light" } onClick={editMap}>
+                    <i className="material-icons">edit</i>
+                </WButton>
+            </WCol>
+            <WCol size="9" className="mapEntries">
+                {editing ? <WInput onBlur={handleSubmit} defaultValue={props.name} className="mapEdit"/> : <div onClick={selectMap}>{props.name}</div>}
+            </WCol>
 
             <WCol size = "2" className="mapDelete">
                 <WButton className="mapDeleteButton" wType="texted" clickAnimation={props.disabled ? "" : "ripple-light" } onClick={() => props.deleteMap(props._id)}>

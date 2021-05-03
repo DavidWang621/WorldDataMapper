@@ -282,6 +282,7 @@ html {
 
 .mapElement:hover {
     background-color: lightpink;
+    cursor: pointer;
 }
 
 .mapEntries {
@@ -307,6 +308,11 @@ html {
     scrollbar-width: thin;
 }
 
+.mapEditBut {
+    display: flex;
+    align-items: center;
+}
+
 .mapEdit {
     width: 100%;
 }
@@ -327,7 +333,6 @@ html {
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 150%;
 }
 
 .labels {
@@ -335,12 +340,31 @@ html {
     justify-content: center;
     width: 90%;
     margin-left: 5%;
+    height: 5%;
 }
 
 .regionSection {
     height: 75%;
-    display: flex;
-    justify-content: center;
     width: 90%;
     margin-left: 5%;
+    overflow-y: scroll;
+    scrollbar-width: thin;
+}
+
+.entryNameTop, .entryCapital, .entryLeader, .entryFlag, .entryLandmarks {
+    display: flex;
+    justify-content: center;
+    padding-top: 2%;
+    padding-bottom: 2%;
+    align-items: center;
+}
+
+.entryName {
+    display: flex;
+    justify-content: center;
+}
+
+.entryClose {
+    margin-right: 20%;
+    margin-left: -40%;
 }

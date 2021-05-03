@@ -282,10 +282,23 @@ html, body {
 }
 
 .topArea {
-    border: solid;
     background-color: rgb(245, 66, 155);
 }
 
 .regionSection {
     background-color: gray;
+}
+
+.entryNameTop, .entryCapital, .entryLeader, .entryFlag, .entryLandmarks {
+    border: 1px solid;
+    background-color: lightgray;
+}
+
+.entryNameTop:hover, .entryCapital:hover, .entryLeader:hover, .entryFlag:hover, .entryLandmarks:hover {
+    background-color: darkgray;
+    cursor: pointer;
+}
+
+.entryClose {
+    color: red;
 }
