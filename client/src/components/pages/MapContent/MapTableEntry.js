@@ -22,8 +22,9 @@ const MapTableEntry = (props) => {
     }
 
     const selectMap = (e) => {
-        props.handleSelectMap(props._id);
-        history.push("/region/:id");
+        props.handleSelectMap(props.entry);
+        // history.push("/maps/" + props.name);
+        history.push("/maps/region");
     }
 
     return (

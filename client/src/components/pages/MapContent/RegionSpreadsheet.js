@@ -1,12 +1,13 @@
 import React, {useState}                                from 'react';
 import { WLayout, WLHeader, WLMain, WLSide, WButton }   from 'wt-frontend';
-import { WNavbar, WSidebar, WNavItem }                 	from 'wt-frontend';
+import { WNavbar, WSidebar, WNavItem, WRow, WCol }      from 'wt-frontend';
 import Logo 							                from '../../navbar/Logo';
 import NavbarOptions                                    from '../../navbar/NavbarOptions';
 import { useMutation, useQuery } 		                from '@apollo/client';
 import { GET_DB_MAPS } 					                from '../../../cache/queries';
 import UpdateAccount                                    from '../../modals/UpdateAccount';
-
+import RegionTableContents                              from './RegionTableContents';
+import * as mutations 					                from '../../../cache/mutations';
 
 const RegionSpreadsheet = (props) => {
 
@@ -17,6 +18,10 @@ const RegionSpreadsheet = (props) => {
 	const [showLogin, toggleShowLogin] 		= useState(false);
 	const [showCreate, toggleShowCreate] 	= useState(false);
 	const [showUpdate, toggleShowUpdate]	= useState(false);
+
+    const [addRegion]				        = useMutation(mutations.ADD_REGION);
+
+    let regions = props.region.regions;
 
     const setShowLogin = () => {
 		toggleShowCreate(false);
@@ -35,6 +40,33 @@ const RegionSpreadsheet = (props) => {
 		toggleShowLogin(false);
 		toggleShowUpdate(!showUpdate);	
 	};
+
+    const addSubRegion = async () => {
+        let region = {
+            _id: '',
+            name: 'untitled',
+            capital: 'untitled',
+            leader: 'untitled',
+            landmarks: []
+        }
+        const { data } = await addRegion({ variables: { region: region, _id: props.region._id, index: -1 }, refetchQueries: [{ query: GET_DB_MAPS}]});
+		if (data) {
+			console.log("Added new region");
+		}
+		refetch();
+    }
+
+    const undo = () => {
+
+    }
+
+    const redo = () => {
+
+    }
+
+    const printRegion = () => {
+        console.log(props.region);
+    }
 
     return (
         <WLayout wLayout="header-side">
@@ -58,9 +90,47 @@ const RegionSpreadsheet = (props) => {
             {showUpdate ? 
 			<UpdateAccount fetchUser={props.fetchUser} setShowUpdate={setShowUpdate} user={props.user}/>
 			:
-            <div>
-                Hey!
+            <>
+            <div className="regionTopArea">
+                <WButton className="regionAdd" wType="texted" clickAnimation={props.disabled ? "" : "ripple-light" } onClick={addSubRegion}>
+                        <i className="material-icons">add</i>
+                </WButton>
+                <WButton className="regionUndoRedo" wType="texted" clickAnimation={props.disabled ? "" : "ripple-light" } onClick={undo}>
+                    <i className="material-icons">undo</i>
+                </WButton>
+                <WButton className="regionUndoRedo" wType="texted" clickAnimation={props.disabled ? "" : "ripple-light" } onClick={printRegion}>
+                    <i className="material-icons">redo</i>
+                </WButton>
+                <div className="regionArea">
+                    <div className="regionNameTitle">
+                        Region Name:
+                    </div>
+                    <div className="regionName">
+                        {props.region.name}
+                    </div>
+                </div>
             </div>
+            <WRow className="topLabel" className="labels">
+                <WCol size="2" className="topArea">
+                    Name
+                </WCol>
+                <WCol size="2" className="topArea">
+                    Capital
+                </WCol>
+                <WCol size="2" className="topArea">
+                    Leader
+                </WCol>
+                <WCol size="2" className="topArea">
+                    Flag
+                </WCol>
+                <WCol size="4" className="topArea">
+                    Landmarks
+                </WCol>
+            </WRow>
+            <div className="regionSection">
+                <RegionTableContents region={regions}/>
+            </div>
+            </>
             }
         </WLayout>
     );

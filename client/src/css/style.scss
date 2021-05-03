@@ -260,3 +260,32 @@ html, body {
 .mapEntries {
     font-size: 20px;
 }
+
+.regionAdd {
+    color: green;
+}
+
+.regionUndoRedo {
+    color: white;
+}
+
+.regionNameTitle {
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.regionName {
+    color: lightblue;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.topArea {
+    border: solid;
+    background-color: rgb(245, 66, 155);
+}
+
+.regionSection {
+    background-color: gray;
+}

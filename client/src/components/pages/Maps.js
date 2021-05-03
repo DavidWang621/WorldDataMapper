@@ -7,11 +7,12 @@ import CreateAccount 					from '../modals/CreateAccount';
 import NavbarOptions 					from '../navbar/NavbarOptions';
 import * as mutations 					from '../../cache/mutations';
 import MapTableContent					from './MapContent/MapTableContents';
+import RegionSpreadsheet				from './MapContent/RegionSpreadsheet';
 import { GET_DB_MAPS } 					from '../../cache/queries';
 import React, { useState } 				from 'react';
 import { useMutation, useQuery } 		from '@apollo/client';
 import { WNavbar, WSidebar, WNavItem } 	from 'wt-frontend';
-import { Route }						from 'react-router-dom';
+import { Route, Switch }						from 'react-router-dom';
 import { WLayout, WLHeader, WLMain, WLSide, WButton } from 'wt-frontend';
 import { WRow, WCol } from 'wt-frontend';
 import { UpdateListField_Transaction, 
@@ -29,6 +30,8 @@ const Maps = (props) => {
 	const [showLogin, toggleShowLogin] 		= useState(false);
 	const [showCreate, toggleShowCreate] 	= useState(false);
 	const [showUpdate, toggleShowUpdate]	= useState(false);
+	const [mapSelect, toggleMapSelect]		= useState(true);
+	const [regionSet, setRegionSet] 		= useState({});
 
     const { loading, error, data, refetch } = useQuery(GET_DB_MAPS);
     if(loading) { console.log(loading, 'loading'); }
@@ -103,19 +106,23 @@ const Maps = (props) => {
 		refetch();
 	}
 
-	let tempRegion = [];
-
-	const selectMap = async (_id) => {
-		for (let i = 0; i < maplists.length; i++) {
-			if (maplists[i]._id === _id) {
-				tempRegion = maplists[i];
-			}
-		}
-		props.region(tempRegion);
+	const selectMap = async (entry) => {
+		// for (let i = 0; i < maplists.length; i++) {
+		// 	if (maplists[i]._id === _id) {
+		// 		tempRegion = maplists[i];
+		// 	}
+		// }
+		setRegionSet(entry);
+		toggleMapSelect(false);
 	}
 
     return (
 		<WLayout wLayout="header-side">
+			{
+			mapSelect ?
+
+			!showUpdate &&
+			<>
 			<WLHeader>
 				<WNavbar color="colored">
 					<ul>
@@ -133,15 +140,11 @@ const Maps = (props) => {
 					</ul>
 				</WNavbar>
 			</WLHeader>
-            {showUpdate ? 
-			<UpdateAccount fetchUser={props.fetchUser} setShowUpdate={setShowUpdate} user={props.user}/>
-			:
-			(<>
 			<div className="mapTitleCol">Your Maps</div>
             <div className="mapTitleCol2"></div>
             <div className="mapTableContent">
 				<MapTableContent 
-					maplist={simpMapLists}		updateMap={updateMapField}
+					maplist={maplists}		updateMap={updateMapField}
 					deleteMap={deleteMapField}		handleSelectMap={selectMap}
 				/>
 			</div>
@@ -151,7 +154,22 @@ const Maps = (props) => {
                     Create New Map
                 </WButton>
             </div>
-			</>)}	
+			</>
+
+			:
+
+			<Route
+				// path={"/maps/" + tempRegion.name}
+				path={"/maps/region"}
+				name={"region" + regionSet.name}
+				render={() => <RegionSpreadsheet user={props.user} fetchUser={refetch} region={regionSet}/>}
+			>
+			</Route>
+			}
+
+			{
+				showUpdate && <UpdateAccount fetchUser={props.fetchUser} setShowUpdate={setShowUpdate} user={props.user}/>
+			}
 		</WLayout>
     );
 }

@@ -310,3 +310,37 @@ html {
 .mapEdit {
     width: 100%;
 }
+
+.regionArea {
+    display: flex;
+    margin-left: 30%;
+    margin-right: 30%;
+    align-items: center;
+}
+
+.regionTopArea {
+    display: flex;
+    margin-top: 2%;
+}
+
+.topArea {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 150%;
+}
+
+.labels {
+    margin-top: 1%;
+    justify-content: center;
+    width: 90%;
+    margin-left: 5%;
+}
+
+.regionSection {
+    height: 75%;
+    display: flex;
+    justify-content: center;
+    width: 90%;
+    margin-left: 5%;
+}

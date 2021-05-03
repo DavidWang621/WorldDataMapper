@@ -24,6 +24,7 @@ const App = () => {
 
 	const changeRegion = (region) => {
 		getRegionName(region);
+		console.log(regionName);
 	}
 
 	return(
@@ -44,14 +45,6 @@ const App = () => {
 					render={() => 
 						<Maps tps={transactionStack} fetchUser={refetch} user={user} refreshTps={refreshTps} region={changeRegion}/>
 					} 
-				>
-				</Route>
-				<Route
-					path="/region/:id"
-					name="region"
-					render={() => 
-						<RegionSpreadsheet user={user} fetchUser={refetch}/>
-					}
 				>
 				</Route>
 			</Switch>
