@@ -13,15 +13,24 @@ const RegionSpreadsheet = (props) => {
 
     const auth = props.user === null ? false : true;
 
-    const { loading, error, data, refetch } = useQuery(GET_DB_MAPS);
-
 	const [showLogin, toggleShowLogin] 		= useState(false);
 	const [showCreate, toggleShowCreate] 	= useState(false);
 	const [showUpdate, toggleShowUpdate]	= useState(false);
+    const [landmarkSelect, toggleLandmarkSelect]    = useState(true);
 
     const [addRegion]				        = useMutation(mutations.ADD_REGION);
 
     let regions = props.region.regions;
+    let maps = [];
+    const { loading, error, data, refetch } = useQuery(GET_DB_MAPS);
+    if (data) {
+        for(let map of data.getAllMaps) {
+			if (props.region._id === map._id) {
+                maps = map.regions;
+            }
+		}
+        console.log(maps);
+    }
 
     const setShowLogin = () => {
 		toggleShowCreate(false);
@@ -53,7 +62,7 @@ const RegionSpreadsheet = (props) => {
 		if (data) {
 			console.log("Added new region");
 		}
-		refetch();
+		props.reloadMap();
     }
 
     const undo = () => {
@@ -81,8 +90,7 @@ const RegionSpreadsheet = (props) => {
 						<NavbarOptions
 							fetchUser={props.fetchUser} 	auth={auth} 
 							setShowCreate={setShowCreate} 	setShowLogin={setShowLogin}
-							reloadTodos={refetch}           user={props.user}				
-                            setShowUpdate={setShowUpdate}
+                            user={props.user}				setShowUpdate={setShowUpdate}
 						/>
 					</ul>
 				</WNavbar>
@@ -128,7 +136,7 @@ const RegionSpreadsheet = (props) => {
                 </WCol>
             </WRow>
             <div className="regionSection">
-                <RegionTableContents region={regions}/>
+                <RegionTableContents region={maps}/>
             </div>
             </>
             }

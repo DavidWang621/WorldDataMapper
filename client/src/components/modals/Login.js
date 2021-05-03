@@ -33,7 +33,6 @@ const Login = (props) => {
 			toggleLoading(false)
 			props.setShowLogin(false)
 			history.push("/maps");
-			history.go(0);
 		};
 	};
 

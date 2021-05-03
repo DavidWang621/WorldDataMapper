@@ -40,6 +40,7 @@ const Maps = (props) => {
 		for(let map of data.getAllMaps) {
 			maplists.push(map)
 		}
+		refetch();
 	// // 	// if a list is selected, shift it to front of maplists
 	// 	if(activeList._id) {
 	// 		let selectedListIndex = maplists.findIndex(entry => entry._id === activeList._id);
@@ -144,7 +145,7 @@ const Maps = (props) => {
             <div className="mapTitleCol2"></div>
             <div className="mapTableContent">
 				<MapTableContent 
-					maplist={maplists}		updateMap={updateMapField}
+					maplist={maplists}		updateMap={updateMapField}	reloadMap={refetch}
 					deleteMap={deleteMapField}		handleSelectMap={selectMap}
 				/>
 			</div>
@@ -160,9 +161,9 @@ const Maps = (props) => {
 
 			<Route
 				// path={"/maps/" + tempRegion.name}
-				path={"/maps/region"}
+				path={"/maps/" + regionSet.name + "/" + regionSet._id}
 				name={"region" + regionSet.name}
-				render={() => <RegionSpreadsheet user={props.user} fetchUser={refetch} region={regionSet} toggleMapSelect={toggleMapSelect}/>}
+				render={() => <RegionSpreadsheet user={props.user} fetchUser={refetch} region={regionSet} toggleMapSelect={toggleMapSelect} reloadMap={refetch}/>}
 			>
 			</Route>
 			}
