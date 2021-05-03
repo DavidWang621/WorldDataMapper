@@ -127,7 +127,7 @@ const Maps = (props) => {
 				<WNavbar color="colored">
 					<ul>
 						<WNavItem>
-							<Logo className='logo' />
+							<Logo className='logo' toggleMap={toggleMapSelect}/>
 						</WNavItem>
 					</ul>
 					<ul>
@@ -162,7 +162,7 @@ const Maps = (props) => {
 				// path={"/maps/" + tempRegion.name}
 				path={"/maps/region"}
 				name={"region" + regionSet.name}
-				render={() => <RegionSpreadsheet user={props.user} fetchUser={refetch} region={regionSet}/>}
+				render={() => <RegionSpreadsheet user={props.user} fetchUser={refetch} region={regionSet} toggleMapSelect={toggleMapSelect}/>}
 			>
 			</Route>
 			}
