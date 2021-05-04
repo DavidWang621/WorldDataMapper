@@ -8,7 +8,9 @@ const RegionTableContents = (props) => {
             {
                 props.region && 
                 props.region.map(entry => (
-                    <RegionEntry name={entry.name}  _id={entry._id} key={entry._id} entry={entry}/>
+                    <RegionEntry name={entry.name}  _id={entry._id} 
+                    key={entry._id} entry={entry} region={props.regionInfo}
+                    handleSelectViewer={props.handleSelectViewer}/>
                 ))
             }
         </>

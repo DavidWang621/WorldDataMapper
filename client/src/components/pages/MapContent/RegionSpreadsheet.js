@@ -8,6 +8,8 @@ import { GET_DB_MAPS } 					                from '../../../cache/queries';
 import UpdateAccount                                    from '../../modals/UpdateAccount';
 import RegionTableContents                              from './RegionTableContents';
 import * as mutations 					                from '../../../cache/mutations';
+import RegionViewer                                     from './RegionViewer';
+import { Route }                                        from 'react-router-dom'
 
 const RegionSpreadsheet = (props) => {
 
@@ -17,6 +19,7 @@ const RegionSpreadsheet = (props) => {
 	const [showCreate, toggleShowCreate] 	= useState(false);
 	const [showUpdate, toggleShowUpdate]	= useState(false);
     const [landmarkSelect, toggleLandmarkSelect]    = useState(true);
+    const [regionEntry, toggleRegionEntry]          = useState({});
 
     const [addRegion]				        = useMutation(mutations.ADD_REGION);
 
@@ -29,7 +32,6 @@ const RegionSpreadsheet = (props) => {
                 maps = map.regions;
             }
 		}
-        console.log(maps);
     }
 
     const setShowLogin = () => {
@@ -74,11 +76,21 @@ const RegionSpreadsheet = (props) => {
     }
 
     const printRegion = () => {
-        console.log(regions);
+
+    }
+
+    const selectLandmark = (entry) => {
+        toggleRegionEntry(entry);
+        toggleLandmarkSelect(false);
     }
 
     return (
         <WLayout wLayout="header-side">
+            {
+            landmarkSelect ?
+
+            !showUpdate &&
+            <>
             <WLHeader>
 				<WNavbar color="colored">
 					<ul>
@@ -95,10 +107,6 @@ const RegionSpreadsheet = (props) => {
 					</ul>
 				</WNavbar>
 			</WLHeader>
-            {showUpdate ? 
-			<UpdateAccount fetchUser={props.fetchUser} setShowUpdate={setShowUpdate} user={props.user}/>
-			:
-            <>
             <div className="regionTopArea">
                 <WButton className="regionAdd" wType="texted" clickAnimation={props.disabled ? "" : "ripple-light" } onClick={addSubRegion}>
                         <i className="material-icons">add</i>
@@ -136,9 +144,23 @@ const RegionSpreadsheet = (props) => {
                 </WCol>
             </WRow>
             <div className="regionSection">
-                <RegionTableContents region={maps}/>
+                <RegionTableContents region={maps} regionInfo={props.regionInfo}    
+                handleSelectViewer={selectLandmark}/>
             </div>
             </>
+            :
+            <Route
+				// path={"/maps/" + tempRegion.name}
+				path={"/maps/" + props.regionInfo.name + "/" + props.regionInfo._id}
+				name={"region" + props.regionInfo.name}
+				render={() => <RegionViewer reload={refetch} user={props.user} fetchUser={props.fetchUser} 
+                toggleMap={props.toggleMapSelect} region={props.region} subregion={regionEntry} toggleLandmark={toggleLandmarkSelect}/>}
+			>
+			</Route>
+            }
+
+            {
+                showUpdate && <UpdateAccount fetchUser={props.fetchUser} setShowUpdate={setShowUpdate} user={props.user}/>
             }
         </WLayout>
     );

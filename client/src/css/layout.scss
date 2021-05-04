@@ -368,3 +368,64 @@ html {
     margin-right: 20%;
     margin-left: -40%;
 }
+
+.viewerTop{
+    margin-top: 1%;
+}
+
+.regionLandmarkTitle {
+    float: right;
+    margin-left: 65%;
+}
+
+.viewerTop {
+    display: flex;
+    align-items: center;
+}
+
+.mainViewer {
+    height: 85%;
+}
+
+.leftViewer {
+    height: 100%;
+    float: left;
+    width: 45%;
+    margin-left: 5%;
+}
+
+.rightViewer {
+    height: 100%;
+    float: right;
+    width: 50%;
+}
+
+.viewerFlag {
+    width: 50%;
+    height: 35%;
+}
+
+.parentViewer {
+    cursor: pointer;
+}
+
+.viewerName, .nameViewer {
+    margin-top: 5%;
+    margin-bottom: 5%;
+}
+
+.landmarksContent {
+    margin-top: 2%;
+    height: 80%;
+    width: 70%;
+    margin-left: 15%;
+    margin-right: 10%;
+    overflow-y: scroll;
+    scrollbar-width: thin;
+}
+
+.addLandmark {
+    height: 5%;
+    width: 70%;
+    margin-left: 15%;
+}

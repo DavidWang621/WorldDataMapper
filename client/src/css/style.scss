@@ -302,3 +302,46 @@ html, body {
 .entryClose {
     color: red;
 }
+
+.viewerUndoRedo {
+    color: white;
+}
+
+.regionLandmarkTitle {
+    color: white;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+// .leftViewer {
+//     background-color: lightpink;
+// }
+
+// .rightViewer {
+//     background-color: lightblue;
+// }
+
+.viewerFlag {
+    background-color: white;
+}
+
+.parentViewer {
+    color: lightblue !important;
+}
+
+.viewerName, .nameViewer {
+    font-size: 20px;
+    color: white;
+}
+
+.landmarksContent {
+    background-color: black;   
+}
+
+.addLandmark {
+    background-color: gray;
+}
+
+.addLandmarkButton {
+    color: green !important;
+}

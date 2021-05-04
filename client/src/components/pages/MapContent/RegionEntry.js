@@ -1,13 +1,17 @@
 import React, { useState }                              from 'react';
 import { WNavItem, WInput, WButton, WRow, WCol }        from 'wt-frontend';
+import { useHistory }                                   from 'react-router-dom'
 
 const RegionEntry = (props) => {
+    let history = useHistory();
+
     const deleteSubRegion = () => {
 
     }
 
     const goToViewer = () => {
-        console.log("Hello");
+        history.push("/maps/" + props.region.name + "/" + props.region._id);
+        props.handleSelectViewer(props.entry);
     }
 
     return (

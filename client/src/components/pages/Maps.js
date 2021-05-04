@@ -8,6 +8,7 @@ import NavbarOptions 					from '../navbar/NavbarOptions';
 import * as mutations 					from '../../cache/mutations';
 import MapTableContent					from './MapContent/MapTableContents';
 import RegionSpreadsheet				from './MapContent/RegionSpreadsheet';
+import RegionViewer						from './MapContent/RegionViewer';
 import { GET_DB_MAPS } 					from '../../cache/queries';
 import React, { useState } 				from 'react';
 import { useMutation, useQuery } 		from '@apollo/client';
@@ -158,14 +159,15 @@ const Maps = (props) => {
 			</>
 
 			:
-
+			<>
 			<Route
 				// path={"/maps/" + tempRegion.name}
-				path={"/maps/" + regionSet.name + "/" + regionSet._id}
+				path={"/maps/" + regionSet.name}
 				name={"region" + regionSet.name}
-				render={() => <RegionSpreadsheet user={props.user} fetchUser={refetch} region={regionSet} toggleMapSelect={toggleMapSelect} reloadMap={refetch}/>}
+				render={() => <RegionSpreadsheet user={props.user} fetchUser={props.fetchUser} region={regionSet} toggleMapSelect={toggleMapSelect} reloadMap={refetch} regionInfo={regionSet}/>}
 			>
 			</Route>
+			</>
 			}
 
 			{
