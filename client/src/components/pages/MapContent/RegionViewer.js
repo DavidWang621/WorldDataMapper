@@ -45,7 +45,7 @@ const RegionViewer = (props) => {
 				<WNavbar color="colored">
 					<ul>
 						<WNavItem>
-							<Logo className='logo' toggleMap={props.toggleMap}/>
+							<Logo className='logo' toggleMap={props.toggleMap} user={props.user}/>
 						</WNavItem>
 					</ul>
 					<ul>

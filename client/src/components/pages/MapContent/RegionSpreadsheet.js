@@ -95,7 +95,7 @@ const RegionSpreadsheet = (props) => {
 				<WNavbar color="colored">
 					<ul>
 						<WNavItem>
-							<Logo className='logo' toggleMap={props.toggleMapSelect}/>
+							<Logo className='logo' toggleMap={props.toggleMapSelect} user={props.user}/>
 						</WNavItem>
 					</ul>
 					<ul>

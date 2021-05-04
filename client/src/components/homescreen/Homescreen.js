@@ -48,7 +48,7 @@ const Homescreen = (props) => {
 				<WNavbar color="colored">
 					<ul>
 						<WNavItem>
-							<Logo className='logo' />
+							<Logo className='logo' user={props.user}/>
 						</WNavItem>
 					</ul>
 					<ul>

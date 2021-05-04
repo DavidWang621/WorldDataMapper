@@ -4,8 +4,10 @@ import { useHistory} from 'react-router-dom';
 const Logo = (props) => {
     let history = useHistory();
     const goHome = () => {
-        props.toggleMap(true);
-        history.push("/maps");
+        if (props.user !== null) {
+            props.toggleMap(true);
+            history.push("/maps");
+        }
     }
 
     return (
