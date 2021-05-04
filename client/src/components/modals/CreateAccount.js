@@ -36,9 +36,9 @@ const CreateAccount = (props) => {
 			}
 			else {
 				props.fetchUser();
+				history.push("/maps");
 			}
 			props.setShowCreate(false);
-			history.push("/maps");
 		};
 	};
 
