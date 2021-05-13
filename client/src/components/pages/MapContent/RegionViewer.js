@@ -71,7 +71,7 @@ const RegionViewer = (props) => {
 			</WLHeader>
             <div className="mainViewer">
                 <div className="leftViewer">
-                    <div className="viewerFlag"></div>
+                    <img src={"/Flags/" + props.subregion.name + "Flag.png"} className="viewerFlag"/>
                     <WRow>
                         <WCol size="3" className="viewerName">
                             Region Name:

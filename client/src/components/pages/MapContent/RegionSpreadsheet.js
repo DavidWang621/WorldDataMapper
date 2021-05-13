@@ -9,7 +9,7 @@ import UpdateAccount                                    from '../../modals/Updat
 import RegionTableContents                              from './RegionTableContents';
 import * as mutations 					                from '../../../cache/mutations';
 import RegionViewer                                     from './RegionViewer';
-import { Route }                                        from 'react-router-dom'
+import { Route }                                        from 'react-router-dom';
 
 const RegionSpreadsheet = (props) => {
 

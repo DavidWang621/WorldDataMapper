@@ -1,6 +1,6 @@
 import React, { useState }                              from 'react';
 import { WNavItem, WInput, WButton, WRow, WCol }        from 'wt-frontend';
-import { useHistory }                                   from 'react-router-dom'
+import { useHistory }                                   from 'react-router-dom';
 
 const RegionEntry = (props) => {
     let history = useHistory();
@@ -29,7 +29,7 @@ const RegionEntry = (props) => {
                 {props.entry.leader}
             </WCol>
             <WCol size="2" className="entryFlag">
-                Untitled
+                <img src={"/Flags/" + props.name + "Flag.png"} alt="No Flag" className="flagImage"/>
             </WCol>
             <WCol size="4" className="entryLandmarks" onClick={goToViewer}>
                 ...
