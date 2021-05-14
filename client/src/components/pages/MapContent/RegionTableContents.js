@@ -11,7 +11,7 @@ const RegionTableContents = (props) => {
                     <RegionEntry name={entry.name}  _id={entry._id} 
                     key={entry._id} entry={entry} region={props.regionInfo}
                     handleSelectViewer={props.handleSelectViewer} updateRegion={props.updateRegion}
-                    deleteRegion={props.deleteRegion}/>
+                    deleteRegion={props.deleteRegion} tps={props.tps}/>
                 ))
             }
         </>

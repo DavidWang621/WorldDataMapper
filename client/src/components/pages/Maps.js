@@ -164,7 +164,7 @@ const Maps = (props) => {
 				// path={"/maps/" + tempRegion.name}
 				path={"/maps/" + regionSet.name}
 				name={"region" + regionSet.name}
-				render={() => <RegionSpreadsheet user={props.user} fetchUser={props.fetchUser} region={regionSet} toggleMapSelect={toggleMapSelect} reloadMap={refetch} regionInfo={regionSet}/>}
+				render={() => <RegionSpreadsheet tps={props.tps} user={props.user} fetchUser={props.fetchUser} region={regionSet} toggleMapSelect={toggleMapSelect} reloadMap={refetch} regionInfo={regionSet}/>}
 			>
 			</Route>
 			</>

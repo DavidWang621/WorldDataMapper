@@ -10,21 +10,27 @@ import RegionTableContents                              from './RegionTableConte
 import * as mutations 					                from '../../../cache/mutations';
 import RegionViewer                                     from './RegionViewer';
 import { Route }                                        from 'react-router-dom';
+import { AddListItems_Transaction, 
+    EditListItems_Transaction, 
+    SortListItems_Transaction, 
+    DeleteListItems_Transaction }                       from '../../../utils/jsTPS';
 
 const RegionSpreadsheet = (props) => {
 
     const auth = props.user === null ? false : true;
 
-	const [showLogin, toggleShowLogin] 		= useState(false);
-	const [showCreate, toggleShowCreate] 	= useState(false);
-	const [showUpdate, toggleShowUpdate]	= useState(false);
+	const [showLogin, toggleShowLogin] 		        = useState(false);
+	const [showCreate, toggleShowCreate] 	        = useState(false);
+	const [showUpdate, toggleShowUpdate]	        = useState(false);
     const [landmarkSelect, toggleLandmarkSelect]    = useState(true);
     const [regionEntry, toggleRegionEntry]          = useState({});
+    const [canUndo, setCanUndo]                     = useState(props.tps.hasTransactionToUndo());
+	const [canRedo, setCanRedo]                     = useState(props.tps.hasTransactionToRedo());
 
     const [addRegion]				        = useMutation(mutations.ADD_REGION);
     const [updateRegion]                    = useMutation(mutations.UPDATE_REGION);
     const [deleteRegion]                    = useMutation(mutations.DELETE_REGION);
-    const [sortRegion]                      = useMutation (mutations.SORT_REGION);
+    const [sortRegion]                      = useMutation(mutations.SORT_REGION);
 
     let regions = props.region.regions;
     let maps = [];
@@ -36,6 +42,22 @@ const RegionSpreadsheet = (props) => {
             }
 		}
     }
+
+    const tpsUndo = async () => {
+		const ret = await props.tps.undoTransaction();
+		if(ret) {
+			setCanUndo(props.tps.hasTransactionToUndo());
+			setCanRedo(props.tps.hasTransactionToRedo());
+		}
+	}
+
+	const tpsRedo = async () => {
+		const ret = await props.tps.doTransaction();
+		if(ret) {
+			setCanUndo(props.tps.hasTransactionToUndo());
+			setCanRedo(props.tps.hasTransactionToRedo());
+		}
+	}
 
     const setShowLogin = () => {
 		toggleShowCreate(false);
@@ -63,32 +85,54 @@ const RegionSpreadsheet = (props) => {
             leader: 'Untitled',
             landmarks: []
         }
-        const { data } = await addRegion({ variables: { region: region, _id: props.region._id, index: -1 }});
-		if (data) {
-			console.log("Added new region");
-		}
+        let temp = [{ query: GET_DB_MAPS }];
+        let mapId = props.region._id;
+        let transaction = new AddListItems_Transaction(mapId, region, addRegion, deleteRegion, temp);
+        props.tps.addTransaction(transaction);
+        tpsRedo();
+        // const { data } = await addRegion({ variables: { region: region, _id: props.region._id, index: -1 }});
+		// if (data) {
+		// 	console.log("Added new region");
+		// }
 		// props.reloadMap();
     }
 
-    const updateRegionField = async (itemId, field, value) => {
+    const updateRegionField = async (itemId, field, value, oldValue) => {
         console.log("itemId", itemId);
         console.log("field", field);
         console.log("value", value);
         console.log("mapId", props.region._id);
-        const { data } = await updateRegion({ variables: { mapId: props.region._id, _id: itemId, value: value, field: field}});
-		if (data) {
-			console.log("Updated region");
-		}
+        let transaction = new EditListItems_Transaction(props.region._id, itemId, value, field, oldValue, updateRegion);
+        props.tps.addTransaction(transaction);
+        tpsRedo();
+        // const { data } = await updateRegion({ variables: { mapId: props.region._id, _id: itemId, value: value, field: field}});
+		// if (data) {
+		// 	console.log("Updated region");
+		// }
 		// props.reloadMap();
     }
 
     const deleteRegionField = async (itemId) => {
         console.log("itemId", itemId);
         console.log("mapId", props.region._id);
-        const { data } = await deleteRegion({ variables: { mapId: props.region._id, itemId: itemId}});
-        if (data) {
-            console.log("Deleted region");
+        console.log(maps);
+        let index = -1;
+        let tempRegion = null;
+        for (let i = 0; i < maps.length; i++) {
+            if (itemId === maps[i]._id){
+                index = i;
+                tempRegion = maps[i];
+            }
         }
+        console.log(index);
+        console.log(tempRegion);
+        let transaction = new DeleteListItems_Transaction(props.region._id, itemId, index, tempRegion, addRegion, deleteRegion);
+        props.tps.addTransaction(transaction);
+        tpsRedo();
+        // const { data } = await deleteRegion({ variables: { mapId: props.region._id, itemId: itemId}});
+        // if (data) {
+        //     console.log("Deleted region");
+        // }
         // props.reloadMap();
     }
 
@@ -97,11 +141,14 @@ const RegionSpreadsheet = (props) => {
         let order = isInIncreasingOrder(itemToSort, field);
         console.log(order);
         console.log(maps);
-        const { data } = await sortRegion({ variables: { _id: props.region._id, criteria: field, order: order}});
-        if (data) {
-            console.log("Sorted region");
-        }
-        props.reloadMap();
+        // const { data } = await sortRegion({ variables: { _id: props.region._id, criteria: field, order: order}});
+        // if (data) {
+        //     console.log("Sorted region");
+        // }
+        // props.reloadMap();
+        let transaction = new SortListItems_Transaction(props.region._id, field, order, sortRegion);
+        props.tps.addTransaction(transaction);
+        tpsRedo();
     }
 
     const isInIncreasingOrder = (items, criteria) => {
@@ -141,7 +188,7 @@ const RegionSpreadsheet = (props) => {
 				<WNavbar color="colored">
 					<ul>
 						<WNavItem>
-							<Logo className='logo' toggleMap={props.toggleMapSelect} user={props.user}/>
+							<Logo className='logo' toggleMap={props.toggleMapSelect} user={props.user} tps={props.tps}/>
 						</WNavItem>
 					</ul>
 					<ul>
@@ -157,10 +204,10 @@ const RegionSpreadsheet = (props) => {
                 <WButton className="regionAdd" wType="texted" clickAnimation={props.disabled ? "" : "ripple-light" } onClick={addSubRegion}>
                         <i className="material-icons">add</i>
                 </WButton>
-                <WButton className="regionUndoRedo" wType="texted" clickAnimation={props.disabled ? "" : "ripple-light" } onClick={undo}>
+                <WButton className="regionUndoRedo" wType="texted" clickAnimation={props.disabled ? "" : "ripple-light" } onClick={tpsUndo}>
                     <i className="material-icons">undo</i>
                 </WButton>
-                <WButton className="regionUndoRedo" wType="texted" clickAnimation={props.disabled ? "" : "ripple-light" } onClick={printRegion}>
+                <WButton className="regionUndoRedo" wType="texted" clickAnimation={props.disabled ? "" : "ripple-light" } onClick={tpsRedo}>
                     <i className="material-icons">redo</i>
                 </WButton>
                 <div className="regionArea">
@@ -192,7 +239,7 @@ const RegionSpreadsheet = (props) => {
             <div className="regionSection">
                 <RegionTableContents region={maps} regionInfo={props.regionInfo}    
                 handleSelectViewer={selectLandmark} updateRegion={updateRegionField}
-                deleteRegion={deleteRegionField}/>
+                deleteRegion={deleteRegionField} tps={props.tps}/>
             </div>
             </>
             :
@@ -201,7 +248,7 @@ const RegionSpreadsheet = (props) => {
 				path={"/maps/" + props.regionInfo.name + "/" + props.regionInfo._id}
 				name={"region" + props.regionInfo.name}
 				render={() => <RegionViewer reload={refetch} user={props.user} fetchUser={props.fetchUser} 
-                toggleMap={props.toggleMapSelect} region={props.region} subregion={regionEntry} toggleLandmark={toggleLandmarkSelect}/>}
+                toggleMap={props.toggleMapSelect} region={props.region} subregion={regionEntry} toggleLandmark={toggleLandmarkSelect} tps={props.tps}/>}
 			>
 			</Route>
             }

@@ -13,6 +13,7 @@ const RegionEntry = (props) => {
     }
 
     const goToViewer = () => {
+        props.tps.clearAllTransactions();
         history.push("/maps/" + props.region.name + "/" + props.region._id);
         props.handleSelectViewer(props.entry);
     }
@@ -22,7 +23,7 @@ const RegionEntry = (props) => {
         toggleEditName(!editName); 
         const { name, value } = e.target;
         console.log(value);
-        props.updateRegion(props._id, "name", value);
+        props.updateRegion(props._id, "name", value, props.name);
     }
 
     const handleCapitalSubmit = (e) => {
@@ -30,7 +31,7 @@ const RegionEntry = (props) => {
         toggleEditCapital(!editCapital);
         const { name, value } = e.target;
         console.log(value);
-        props.updateRegion(props._id, "capital", value);
+        props.updateRegion(props._id, "capital", value, props.entry.capital);
     }
 
     const handleLeaderSubmit = (e) => {
@@ -38,7 +39,7 @@ const RegionEntry = (props) => {
         toggleEditLeader(!editLeader);
         const { name, value } = e.target;
         console.log(value);
-        props.updateRegion(props._id, "leader", value);
+        props.updateRegion(props._id, "leader", value, props.entry.leader);
     }
 
     return (

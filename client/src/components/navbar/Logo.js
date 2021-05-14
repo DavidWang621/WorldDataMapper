@@ -6,6 +6,7 @@ const Logo = (props) => {
     const goHome = () => {
         if (props.user !== null) {
             props.toggleMap(true);
+            props.tps.clearAllTransactions();
             history.push("/maps");
         }
     }

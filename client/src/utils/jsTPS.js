@@ -4,152 +4,96 @@ export class jsTPS_Transaction {
     doTransaction() {};
     undoTransaction () {};
 }
-/*  Handles list name changes, or any other top level details of a todolist that may be added   */
-export class UpdateListField_Transaction extends jsTPS_Transaction {
-    constructor(_id, field, prev, update, callback) {
+
+export class SortListItems_Transaction extends jsTPS_Transaction {
+    constructor(_id, field, order, sortfunc) {
         super();
-        this.prev = prev;
-        this.update = update;
-        this.field = field;
         this._id = _id;
-        this.updateFunction = callback;
+        this.field = field;
+        this.order = order;
+        this.sortFunction = sortfunc;
     }
     async doTransaction() {
-		const { data } = await this.updateFunction({ variables: { _id: this._id, field: this.field, value: this.update }});
-		return data;
+        const { data } = await this.sortFunction({variables: {_id: this._id, criteria: this.field, order: this.order}});
+        return data;
     }
     async undoTransaction() {
-        const { data } = await this.updateFunction({ variables: { _id: this._id, field: this.field, value: this.prev }});
-		return data;
+        const { data } = await this.sortFunction({variables: {_id: this._id, criteria: this.field, order: !this.order}});
+        return data;
     }
 }
 
-/*  Handles item reordering */
-export class ReorderItems_Transaction extends jsTPS_Transaction {
-    constructor(listID, itemID, dir, callback) {
+export class EditListItems_Transaction extends jsTPS_Transaction {
+    constructor(mapId, regionId, value, field, oldValue, updatefunc) {
         super();
-        this.listID = listID;
-        this.itemID = itemID;
-		this.dir = dir;
-		this.revDir = dir === 1 ? -1 : 1;
-		this.updateFunction = callback;
-	}
-
-    async doTransaction() {
-		const { data } = await this.updateFunction({ variables: { itemId: this.itemID, _id: this.listID, direction: this.dir }});
-		return data;
-    }
-
-    async undoTransaction() {
-		const { data } = await this.updateFunction({ variables: { itemId: this.itemID, _id: this.listID, direction: this.revDir }});
-		return data;
-
-    }
-    
-}
-
-export class SortItems_Transaction extends jsTPS_Transaction{
-    constructor(listID, nextSortRule, prevSortRule, callback) {
-        super();
-        this.listID = listID;
-        this.nextSortRule = nextSortRule;
-        this.prevSortRule = prevSortRule;
-        this.updateFunction = callback;
+        this.mapId = mapId;
+        this.regionId = regionId;
+        this.value = value;
+        this.field = field;
+        this.oldValue = oldValue;
+        this.updateFunction = updatefunc;
     }
     async doTransaction() {
-		const { data } = await this.updateFunction({ variables: { _id: this.listID, criteria: this.nextSortRule}});
-        if(data) {
-            console.log(data)
-            return data;
-
-        }
+        const { data } = await this.updateFunction({variables: {mapId: this.mapId, _id: this.regionId, value: this.value, field: this.field}});
+        return data;
     }
-
     async undoTransaction() {
-		const { data } = await this.updateFunction({ variables: { _id: this.listID, criteria: this.prevSortRule}});
-        if(data) {
-            console.log(data)
-            return data;
-
-        }
-
+        const { data } = await this.updateFunction({variables: {mapId: this.mapId, _id: this.regionId, value: this.oldValue, field: this.field}});
+        return data;
     }
 }
 
-export class EditItem_Transaction extends jsTPS_Transaction {
-	constructor(listID, itemID, field, prev, update, flag, callback) {
-		super();
-		this.listID = listID;
-		this.itemID = itemID;
-		this.field = field;
-		this.prev = prev;
-		this.update = update;
-		this.flag = flag;
-		this.updateFunction = callback;
-	}	
-
-	async doTransaction() {
-		const { data } = await this.updateFunction({ 
-				variables:{  itemId: this.itemID, _id: this.listID, 
-							 field: this.field, value: this.update, 
-							 flag: this.flag 
-						  }
-			});
-		return data;
-    }
-
-    async undoTransaction() {
-        console.log('undo: ', this.prev, this.update)
-		const { data } = await this.updateFunction({ 
-				variables:{ itemId: this.itemID, _id: this.listID, 
-							field: this.field, value: this.prev, 
-							flag: this.flag 
-						  }
-			});
-        if(data) console.log(data)
-		return data;
-
-    }
-}
-
-/*  Handles create/delete of list items */
-export class UpdateListItems_Transaction extends jsTPS_Transaction {
-    // opcodes: 0 - delete, 1 - add 
-    constructor(listID, itemID, item, opcode, addfunc, delfunc, index = -1) {
+export class AddListItems_Transaction extends jsTPS_Transaction {
+    constructor(mapId, region, addfunc, delfunc, temp, index=-1) {
         super();
-        this.listID = listID;
-		this.itemID = itemID;
-		this.item = item;
+        this.mapId = mapId;
+        this.region = region;
         this.addFunction = addfunc;
-        this.deleteFunction = delfunc;
-        this.opcode = opcode;
+        this.delFunction = delfunc;
         this.index = index;
+        this.temp = temp;
+        this.regionId = "";
     }
     async doTransaction() {
-		let data;
-        this.opcode === 0 ? { data } = await this.deleteFunction({
-							variables: {itemId: this.itemID, _id: this.listID}})
-						  : { data } = await this.addFunction({
-							variables: {item: this.item, _id: this.listID, index: this.index}})  
-		if(this.opcode !== 0) {
-            this.item._id = this.itemID = data.addItem;
-		}
-		return data;
-    }
-    // Since delete/add are opposites, flip matching opcode
-    async undoTransaction() {
-		let data;
-        this.opcode === 1 ? { data } = await this.deleteFunction({
-							variables: {itemId: this.itemID, _id: this.listID}})
-                          : { data } = await this.addFunction({
-							variables: {item: this.item, _id: this.listID, index: this.index}})
-		if(this.opcode !== 1) {
-            this.item._id = this.itemID = data.addItem;
+        const { data } = await this.addFunction({variables: {_id: this.mapId, region: this.region, index: this.index}});
+        if (data !== 'could not add item') {
+            this.regionId = data.addRegion;
         }
-		return data;
+        return data;
+    }
+    async undoTransaction() {
+        const { data } = await this.delFunction({variables: {mapId: this.mapId, itemId: this.regionId}});
+        return data;
     }
 }
 
+export class DeleteListItems_Transaction extends jsTPS_Transaction {
+    constructor(mapId, itemId, index, region, addfunc, delfunc) {
+        super();
+        this.mapId = mapId;
+        this.itemId = itemId;
+        this.index = index;
+        this.region = region;
+        this.addFunction = addfunc;
+        this.delFunction = delfunc;
+        this.newRegion = null;
+    }
+    async doTransaction() {
+        const { data } = await this.delFunction({variables: {mapId: this.mapId, itemId: this.itemId}});
+        return data;
+    }
+    async undoTransaction() {
+        this.newRegion = {
+            _id: this.region._id,
+            name: this.region.name,
+            capital: this.region.capital,
+            leader: this.region.leader,
+            landmarks: this.region.landmarks
+        }
+        const { data } = await this.addFunction({variables: {_id: this.mapId, region: this.newRegion, index: this.index}});
+        return data;
+    }
+}
 
 
 
