@@ -22,6 +22,7 @@ const RegionSpreadsheet = (props) => {
     const [regionEntry, toggleRegionEntry]          = useState({});
 
     const [addRegion]				        = useMutation(mutations.ADD_REGION);
+    const [updateRegion]                    = useMutation(mutations.UPDATE_REGION);
 
     let regions = props.region.regions;
     let maps = [];
@@ -63,6 +64,18 @@ const RegionSpreadsheet = (props) => {
         const { data } = await addRegion({ variables: { region: region, _id: props.region._id, index: -1 }});
 		if (data) {
 			console.log("Added new region");
+		}
+		props.reloadMap();
+    }
+
+    const updateRegionField = async (itemId, field, value) => {
+        console.log("itemId", itemId);
+        console.log("field", field);
+        console.log("value", value);
+        console.log("mapId", props.region._id);
+        const { data } = await updateRegion({ variables: { mapId: props.region._id, _id: itemId, value: value, field: field}});
+		if (data) {
+			console.log("Updated region");
 		}
 		props.reloadMap();
     }
@@ -145,7 +158,7 @@ const RegionSpreadsheet = (props) => {
             </WRow>
             <div className="regionSection">
                 <RegionTableContents region={maps} regionInfo={props.regionInfo}    
-                handleSelectViewer={selectLandmark}/>
+                handleSelectViewer={selectLandmark} updateRegion={updateRegionField}/>
             </div>
             </>
             :

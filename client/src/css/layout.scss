@@ -363,6 +363,8 @@ html {
 .entryName {
     display: flex;
     justify-content: center;
+    align-items: center;
+    // justify-self: right;
 }
 
 .entryClose {
@@ -434,4 +436,9 @@ html {
 
 .flagImage {
     width: 20%;
+}
+
+.nameButton {
+    display: flex;
+    width: 60%;
 }

@@ -75,3 +75,15 @@ export const ADD_REGION = gql`
 		addRegion(region: $region, _id: $_id, index: $index)
 	}
 `;
+
+export const UPDATE_REGION = gql`
+	mutation UpdateRegion($mapId: String!, $_id: String!, $value: String!, $field: String!) {
+		updateRegion(mapId: $mapId, _id: $_id, value: $value, field: $field) {
+			_id
+			name
+			capital
+			leader
+			landmarks
+		}
+	}
+`;

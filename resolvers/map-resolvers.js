@@ -71,6 +71,21 @@ module.exports = {
 			const updated = await Map.updateOne({_id: listId}, {regions: listRegions});
 			if (updated) return (region._id);
 			else return ('could not add item');
+		}, 
+
+		updateRegion: async (_, args) => {
+			const { mapId, _id, value, field} = args;
+			const listId = new ObjectId(mapId);
+			const found = await Map.findOne({_id: listId});
+			let listItem = found.regions;
+			listItem.map(regions => {
+				if(regions._id.toString() === _id) {
+					regions[field] = value;
+				}
+			});
+			const updated = await Map.updateOne({_id: listId}, { regions: listItem })
+			if (updated) return (listItem);
+			else return (found.items);
 		}
 	}
 }
