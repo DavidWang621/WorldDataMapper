@@ -87,3 +87,15 @@ export const UPDATE_REGION = gql`
 		}
 	}
 `;
+
+export const DELETE_REGION = gql`
+	mutation DeleteRegion($mapId: String!, $itemId: String!) {
+		deleteRegion(mapId: $mapId, itemId: $itemId) {
+			_id
+			name
+			capital
+			leader
+			landmarks
+		}
+	}
+`;

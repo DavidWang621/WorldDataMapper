@@ -86,6 +86,17 @@ module.exports = {
 			const updated = await Map.updateOne({_id: listId}, { regions: listItem })
 			if (updated) return (listItem);
 			else return (found.items);
+		}, 
+
+		deleteRegion: async (_, args) => {
+			const { mapId, itemId } = args;
+			const listId = new ObjectId(mapId);
+			const found = await Map.findOne({_id: listId});
+			let listItems = found.regions;
+			listItems = listItems.filter(item => item._id.toString() !== itemId);
+			const updated = await Map.updateOne({_id: listId}, { regions: listItems })
+			if (updated) return (listItems);
+			else return (found.items);
 		}
 	}
 }

@@ -10,7 +10,8 @@ const RegionTableContents = (props) => {
                 props.region.map(entry => (
                     <RegionEntry name={entry.name}  _id={entry._id} 
                     key={entry._id} entry={entry} region={props.regionInfo}
-                    handleSelectViewer={props.handleSelectViewer} updateRegion={props.updateRegion}/>
+                    handleSelectViewer={props.handleSelectViewer} updateRegion={props.updateRegion}
+                    deleteRegion={props.deleteRegion}/>
                 ))
             }
         </>

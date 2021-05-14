@@ -23,6 +23,7 @@ const RegionSpreadsheet = (props) => {
 
     const [addRegion]				        = useMutation(mutations.ADD_REGION);
     const [updateRegion]                    = useMutation(mutations.UPDATE_REGION);
+    const [deleteRegion]                    = useMutation(mutations.DELETE_REGION);
 
     let regions = props.region.regions;
     let maps = [];
@@ -65,7 +66,7 @@ const RegionSpreadsheet = (props) => {
 		if (data) {
 			console.log("Added new region");
 		}
-		props.reloadMap();
+		// props.reloadMap();
     }
 
     const updateRegionField = async (itemId, field, value) => {
@@ -77,7 +78,17 @@ const RegionSpreadsheet = (props) => {
 		if (data) {
 			console.log("Updated region");
 		}
-		props.reloadMap();
+		// props.reloadMap();
+    }
+
+    const deleteRegionField = async (itemId) => {
+        console.log("itemId", itemId);
+        console.log("mapId", props.region._id);
+        const { data } = await deleteRegion({ variables: { mapId: props.region._id, itemId: itemId}});
+        if (data) {
+            console.log("Deleted region");
+        }
+        // props.reloadMap();
     }
 
     const undo = () => {
@@ -158,7 +169,8 @@ const RegionSpreadsheet = (props) => {
             </WRow>
             <div className="regionSection">
                 <RegionTableContents region={maps} regionInfo={props.regionInfo}    
-                handleSelectViewer={selectLandmark} updateRegion={updateRegionField}/>
+                handleSelectViewer={selectLandmark} updateRegion={updateRegionField}
+                deleteRegion={deleteRegionField}/>
             </div>
             </>
             :

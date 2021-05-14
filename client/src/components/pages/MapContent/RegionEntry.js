@@ -9,7 +9,7 @@ const RegionEntry = (props) => {
     let history = useHistory();
 
     const deleteSubRegion = () => {
-
+        props.deleteRegion(props._id);
     }
 
     const goToViewer = () => {
