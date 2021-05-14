@@ -97,6 +97,33 @@ module.exports = {
 			const updated = await Map.updateOne({_id: listId}, { regions: listItems })
 			if (updated) return (listItems);
 			else return (found.items);
+		}, 
+
+		sortRegion: async (_, args) => {
+			const { _id, criteria, order} = args;
+			const listId = new ObjectId(_id);
+			const list = await Map.findOne({_id: listId});
+			let regions = list.regions;
+			regions.sort(function (item1, item2) {
+				let negate = -1;
+				if (!order) {
+				  negate = 1;
+				}
+				let value1 = item1[criteria];
+				let value2 = item2[criteria];
+				if (value1 < value2) {
+				  return -1 * negate;
+				}
+				else if (value1 === value2) {
+				  return 0;
+				}
+				else {
+				  return 1 * negate;
+				}
+			}); 
+			const updated = await Map.updateOne({_id: listId}, {regions: regions});
+			if (updated) return regions;
+			return list.regions;
 		}
 	}
 }

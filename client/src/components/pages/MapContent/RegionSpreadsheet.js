@@ -24,6 +24,7 @@ const RegionSpreadsheet = (props) => {
     const [addRegion]				        = useMutation(mutations.ADD_REGION);
     const [updateRegion]                    = useMutation(mutations.UPDATE_REGION);
     const [deleteRegion]                    = useMutation(mutations.DELETE_REGION);
+    const [sortRegion]                      = useMutation (mutations.SORT_REGION);
 
     let regions = props.region.regions;
     let maps = [];
@@ -91,6 +92,27 @@ const RegionSpreadsheet = (props) => {
         // props.reloadMap();
     }
 
+    const sortRegionField = async (field) => {
+        const itemToSort = maps;
+        let order = isInIncreasingOrder(itemToSort, field);
+        console.log(order);
+        console.log(maps);
+        const { data } = await sortRegion({ variables: { _id: props.region._id, criteria: field, order: order}});
+        if (data) {
+            console.log("Sorted region");
+        }
+        props.reloadMap();
+    }
+
+    const isInIncreasingOrder = (items, criteria) => {
+        for (let i = 0; i < items.length - 1; i++) {
+			if (items[i][criteria] > items[i + 1][criteria]) {
+				return false;
+			}
+		}
+		return true;
+    }
+
     const undo = () => {
 
     }
@@ -151,13 +173,13 @@ const RegionSpreadsheet = (props) => {
                 </div>
             </div>
             <WRow className="topLabel labels">
-                <WCol size="2" className="topArea">
+                <WCol size="2" className="topArea" onClick={() => sortRegionField("name")}>
                     Name
                 </WCol>
-                <WCol size="2" className="topArea">
+                <WCol size="2" className="topArea" onClick={() => sortRegionField("capital")}>
                     Capital
                 </WCol>
-                <WCol size="2" className="topArea">
+                <WCol size="2" className="topArea" onClick={() => sortRegionField("leader")}>
                     Leader
                 </WCol>
                 <WCol size="2" className="topArea">

@@ -35,7 +35,7 @@ const Maps = (props) => {
 	const [regionSet, setRegionSet] 		= useState({});
 
     const { loading, error, data, refetch } = useQuery(GET_DB_MAPS);
-    if(loading) { console.log(loading, 'loading'); }
+    // if(loading) { console.log(loading, 'loading'); }
 	if(error) { console.log(error, 'error'); }
 	if(data) { 
 		for(let map of data.getAllMaps) {

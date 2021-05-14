@@ -285,6 +285,11 @@ html, body {
     background-color: rgb(245, 66, 155);
 }
 
+.topArea:hover {
+    background-color: pink;
+    cursor: pointer;
+}
+
 .regionSection {
     background-color: gray;
 }

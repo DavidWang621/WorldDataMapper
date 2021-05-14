@@ -99,3 +99,15 @@ export const DELETE_REGION = gql`
 		}
 	}
 `;
+
+export const SORT_REGION = gql`
+	mutation SortRegion($_id: String!, $criteria: String!, $order: Boolean!) {
+		sortRegion(_id: $_id, criteria: $criteria, order: $order) {
+			_id
+			name
+			capital
+			leader
+			landmarks
+		}
+	}
+`;
