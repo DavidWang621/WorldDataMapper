@@ -1,9 +1,20 @@
-import React                        from 'react';
-import { WRow, WCol, WButton }      from 'wt-frontend';
+import React, { useState }                        from 'react';
+import { WRow, WCol, WButton, WInput }      from 'wt-frontend';
 
 const LandmarkEntry = (props) => {
-    const deleteLandmark = () => {
 
+    const [editLandmark, toggleEditLandmark]    = useState(false);
+
+    const deleteLandmark = () => {
+        props.deleteLandmark(props.value);
+    }
+
+    const handleLandmarkSubmit = (e) => {
+        e.stopPropagation();
+        toggleEditLandmark(!editLandmark); 
+        const { name, value } = e.target;
+        console.log(value);
+        props.updateLandmark(value, props.value);
     }
 
     return (
@@ -14,9 +25,14 @@ const LandmarkEntry = (props) => {
                 </WButton>
             </WCol>
             <WCol size="5" className="landmarkCol">
-                <div className="landmarkValue">
-                    {props.value}
-                </div>
+                {
+                    editLandmark ? 
+                    <WInput onBlur={handleLandmarkSubmit} defaultValue={props.value}/>
+                    :
+                    <div className="landmarkValue" onClick={() => toggleEditLandmark(!editLandmark)}>
+                        {props.value}
+                    </div>
+                }
             </WCol>
         </WRow>
     );

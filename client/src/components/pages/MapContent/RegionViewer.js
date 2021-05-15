@@ -18,6 +18,8 @@ const RegionViewer = (props) => {
     const [landmarkValue, setLandmarkValue] = useState('');
 
     const [addLandmark]				        = useMutation(mutations.ADD_LANDMARK);
+    const [deleteLandmark]                  = useMutation(mutations.DELETE_LANDMARK);
+    const [updateLandmark]                  = useMutation(mutations.UPDATE_LANDMARK);
 
     const auth = props.user === null ? false : true;
 
@@ -67,13 +69,33 @@ const RegionViewer = (props) => {
     }
 
     const addLandmarkField = async () => {
-        setLandmarkValue('');
-        console.log(props.region._id);
-        console.log(props.subregion._id);
-        console.log(landmarkValue);
-        const { data } = await addLandmark({variables: {mapId: props.region._id, regionId: props.subregion._id, value: landmarkValue, index: -1}});
+        if (landmarkValue !== '') {
+            setLandmarkValue('');
+            console.log(props.region._id);
+            console.log(props.subregion._id);
+            console.log(landmarkValue);
+            const { data } = await addLandmark({variables: {mapId: props.region._id, regionId: props.subregion._id, value: landmarkValue, index: -1}});
+            if (data) {
+                console.log("Updated landmark", data);
+            }
+        }
+    }
+
+    const deleteLandmarkField = async (value) => {
+        const { data } = await deleteLandmark({variables: {mapId: props.region._id, regionId: props.subregion._id, value: value}});
         if (data) {
-            console.log("updated landmark", data);
+            console.log("Deleted landmark", data);
+        }
+    }
+
+    const updateLandmarkField = async (value, oldValue) => {
+        console.log(props.region._id);
+        console.log("regionId", props.subregion._id);
+        console.log(value);
+        console.log(oldValue);
+        const { data } = await updateLandmark({variables: {mapId: props.region._id, regionId: props.subregion._id, value: value, oldValue: oldValue}});
+        if (data) {
+            console.log("Updated landmark", data);
         }
     }
 
@@ -163,7 +185,7 @@ const RegionViewer = (props) => {
                 </div>
                 <div className="rightViewer">
                     <div className="landmarksContent">
-                        <LandmarksTableContents landmarks={landmarks}/>
+                        <LandmarksTableContents landmarks={landmarks} deleteLandmark={deleteLandmarkField} updateLandmark={updateLandmarkField}/>
                     </div>
                     <div className="addLandmark">
                         <WButton wType="texted" clickAnimation={props.disabled ? "" : "ripple-light" } className="addLandmarkButton" onClick={addLandmarkField}>

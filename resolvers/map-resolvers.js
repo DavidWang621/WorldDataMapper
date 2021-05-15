@@ -140,6 +140,54 @@ module.exports = {
 			const updated = await Map.updateOne({_id: listId}, { regions: listItems })
 			if (updated) return (listItems);
 			else return (found.regions);
+		}, 
+
+		deleteLandmark: async (_, args) => {
+			const { mapId, regionId, value } = args;
+			const listId = new ObjectId(mapId);
+			const found = await Map.findOne({_id: listId});
+			let listItems = found.regions;
+			listItems.map(regions => {
+				if(regions._id.toString() === regionId) {
+					regions["landmarks"] = regions["landmarks"].filter(item => item !== value);
+				}
+			});
+			const updated = await Map.updateOne({_id: listId}, { regions: listItems })
+			if (updated) return (listItems);
+			else return (found.regions);
+		}, 
+
+		updateLandmark: async (_, args) => {
+			const { mapId, regionId, value, oldValue } = args;
+			const listId = new ObjectId(mapId);
+			const found = await Map.findOne({_id: listId});
+			let listItems = found.regions;
+			// listItems.map(regions => {
+			// 	if(regions._id.toString() === regionId) {
+			// 		regions["landmarks"].map(items => {
+			// 			if (items === oldValue) {
+			// 				items = value;
+			// 			}
+			// 		});
+			// 		console.log(regions._id);
+			// 	}
+			// });
+			let temp = [];
+			for (let regions of listItems) {
+				if (regions._id.toString() === regionId) {
+					for (let items of regions["landmarks"]) {
+						if (items === oldValue) {
+							temp.push(value);
+						} else {
+							temp.push(items);
+						}
+					}
+					regions["landmarks"] = temp;
+				}
+			}
+			const updated = await Map.updateOne({_id: listId}, { regions: listItems });
+			if (updated) return (listItems);
+			else return (found.regions);
 		}
 	}
 }

@@ -123,3 +123,27 @@ export const ADD_LANDMARK = gql`
 		}
 	}
 `;
+
+export const DELETE_LANDMARK = gql`
+	mutation DeleteLandmark($mapId: String!, $regionId: String!, $value: String!) {
+		deleteLandmark(mapId: $mapId, regionId: $regionId, value: $value) {
+			_id
+			name
+			capital
+			leader
+			landmarks
+		}
+	}
+`;
+
+export const UPDATE_LANDMARK = gql`
+	mutation UpdateLandmark($mapId: String!, $regionId: String!, $value: String!, $oldValue: String!) {
+		updateLandmark(mapId: $mapId, regionId: $regionId, value: $value, oldValue: $oldValue) {
+			_id
+			name
+			capital
+			leader
+			landmarks
+		}
+	}
+`;
