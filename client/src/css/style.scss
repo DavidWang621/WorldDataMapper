@@ -3,7 +3,7 @@
     $background-color: rgb(64, 69, 78),//#d9d6cc,
     $navbar-background-color: #353a44,//rgb(64, 69, 78),
     $sidebar-background-color: #2b2e36,//#353a44,
-    $text-color: #e9edf0,
+    $text-color: black,
     $modal-background: rgb(64, 69, 78),
     $modal-section-padding: 24px,
     $modal-radius: 4px,
@@ -344,9 +344,21 @@ html, body {
 }
 
 .addLandmark {
-    background-color: gray;
+    background-color: rgba(255,255,255, 0.7);
 }
 
 .addLandmarkButton {
     color: green !important;
+}
+
+.inputLandmark {
+    color: black;
+}
+
+.landmarkValue {
+    color: white;
+}
+
+.landmarkClose {
+    color: red;
 }

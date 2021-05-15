@@ -432,6 +432,7 @@ html {
     height: 5%;
     width: 70%;
     margin-left: 15%;
+    display: flex;
 }
 
 .flagImage {
@@ -441,4 +442,20 @@ html {
 .nameButton {
     display: flex;
     width: 60%;
+}
+
+.inputLandmark {
+    width: 60%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.landmarkEntry {
+    display: flex;
+}
+
+.landmarkCol {
+    display: flex;
+    align-items: center;
 }

@@ -124,6 +124,22 @@ module.exports = {
 			const updated = await Map.updateOne({_id: listId}, {regions: regions});
 			if (updated) return regions;
 			return list.regions;
+		}, 
+
+		addLandmark: async (_, args) => {
+			const { mapId, regionId, value, index } = args;
+			const listId = new ObjectId(mapId);
+			const found = await Map.findOne({_id: listId});
+			let listItems = found.regions;
+			listItems.map(regions => {
+				if(regions._id.toString() === regionId) {
+					if (index < 0) regions["landmarks"].push(value);
+					else regions["landmarks"].splice(index, 0, value);
+				}
+			});
+			const updated = await Map.updateOne({_id: listId}, { regions: listItems })
+			if (updated) return (listItems);
+			else return (found.regions);
 		}
 	}
 }

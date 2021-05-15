@@ -111,3 +111,15 @@ export const SORT_REGION = gql`
 		}
 	}
 `;
+
+export const ADD_LANDMARK = gql`
+	mutation AddLandmark($mapId: String!, $regionId: String!, $value: String!, $index: Int!) {
+		addLandmark(mapId: $mapId, regionId: $regionId, value: $value, index: $index) {
+			_id
+			name
+			capital
+			leader
+			landmarks
+		}
+	}
+`;

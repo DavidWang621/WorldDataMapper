@@ -3,16 +3,40 @@ import { WButton, WLayout, WLHeader, WNavbar, WNavItem, WRow, WCol}     from 'wt
 import Logo 							                                from '../../navbar/Logo';
 import NavbarOptions                                                    from '../../navbar/NavbarOptions';
 import UpdateAccount                                                    from '../../modals/UpdateAccount';
-import { useHistory }                                                   from 'react-router-dom'                    
+import { useMutation, useQuery } 		                                from '@apollo/client';
+import { GET_DB_MAPS } 					                                from '../../../cache/queries';
+import { useHistory }                                                   from 'react-router-dom'  
+import LandmarksTableContents                                           from './LandmarksTableContents';   
+import * as mutations 					                                from '../../../cache/mutations';               
+import WInput from 'wt-frontend/build/components/winput/WInput';
 
 const RegionViewer = (props) => {
 
     const [showLogin, toggleShowLogin] 		= useState(false);
 	const [showCreate, toggleShowCreate] 	= useState(false);
 	const [showUpdate, toggleShowUpdate]	= useState(false);
+    const [landmarkValue, setLandmarkValue] = useState('');
+
+    const [addLandmark]				        = useMutation(mutations.ADD_LANDMARK);
 
     const auth = props.user === null ? false : true;
-    
+
+    let maps = [];
+    let landmarks = []
+    const { loading, error, data, refetch } = useQuery(GET_DB_MAPS);
+    if (data) {
+        for(let map of data.getAllMaps) {
+			if (props.region._id === map._id) {
+                maps = map.regions;
+            }
+		}
+        for (let region of maps) {
+            if (props.subregion._id === region._id) {
+                landmarks = region.landmarks
+            }
+        }
+    }
+
     let history = useHistory();
 
     const setShowLogin = () => {
@@ -36,6 +60,21 @@ const RegionViewer = (props) => {
     const moveToSheet = () => {
         props.toggleLandmark(true);
         history.push("/maps/" + props.region.name)
+    }
+
+    const myChangeHandler = (e) => {
+        setLandmarkValue(e.target.value);
+    }
+
+    const addLandmarkField = async () => {
+        setLandmarkValue('');
+        console.log(props.region._id);
+        console.log(props.subregion._id);
+        console.log(landmarkValue);
+        const { data } = await addLandmark({variables: {mapId: props.region._id, regionId: props.subregion._id, value: landmarkValue, index: -1}});
+        if (data) {
+            console.log("updated landmark", data);
+        }
     }
 
     return (
@@ -123,11 +162,14 @@ const RegionViewer = (props) => {
                     </WRow>
                 </div>
                 <div className="rightViewer">
-                    <div className="landmarksContent"></div>
+                    <div className="landmarksContent">
+                        <LandmarksTableContents landmarks={landmarks}/>
+                    </div>
                     <div className="addLandmark">
-                        <WButton wType="texted" clickAnimation={props.disabled ? "" : "ripple-light" } className="addLandmarkButton">
+                        <WButton wType="texted" clickAnimation={props.disabled ? "" : "ripple-light" } className="addLandmarkButton" onClick={addLandmarkField}>
                             <i className="material-icons">add</i>
                         </WButton>
+                        <WInput className="inputLandmark" onChange={myChangeHandler}/>
                     </div>
                 </div>
             </div>

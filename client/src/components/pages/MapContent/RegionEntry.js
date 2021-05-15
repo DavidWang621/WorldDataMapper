@@ -42,6 +42,12 @@ const RegionEntry = (props) => {
         props.updateRegion(props._id, "leader", value, props.entry.leader);
     }
 
+    let landmarks = props.entry.landmarks;
+    let displayLandmark = "...";
+    if (landmarks.length > 0) {
+        displayLandmark = landmarks[0] + ",...";
+    }
+
     return (
         <WRow className="regionEntry">
             <WCol size="2" className="entryNameTop">
@@ -79,7 +85,7 @@ const RegionEntry = (props) => {
                 <img src={"/Flags/" + props.name + " Flag.png"} alt="No Flag" className="flagImage"/>
             </WCol>
             <WCol size="4" className="entryLandmarks" onClick={goToViewer}>
-                ...
+                {displayLandmark}
             </WCol>
         </WRow>
     );

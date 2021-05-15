@@ -160,18 +160,6 @@ const RegionSpreadsheet = (props) => {
 		return true;
     }
 
-    const undo = () => {
-
-    }
-
-    const redo = () => {
-
-    }
-
-    const printRegion = () => {
-
-    }
-
     const selectLandmark = (entry) => {
         toggleRegionEntry(entry);
         toggleLandmarkSelect(false);
@@ -248,7 +236,7 @@ const RegionSpreadsheet = (props) => {
 				path={"/maps/" + props.regionInfo.name + "/" + props.regionInfo._id}
 				name={"region" + props.regionInfo.name}
 				render={() => <RegionViewer reload={refetch} user={props.user} fetchUser={props.fetchUser} 
-                toggleMap={props.toggleMapSelect} region={props.region} subregion={regionEntry} toggleLandmark={toggleLandmarkSelect} tps={props.tps}/>}
+                toggleMap={props.toggleMapSelect} region={props.region} subregion={regionEntry} toggleLandmark={toggleLandmarkSelect} tps={props.tps} />}
 			>
 			</Route>
             }
