@@ -147,3 +147,20 @@ export const UPDATE_LANDMARK = gql`
 		}
 	}
 `;
+
+export const UPDATE_PARENT = gql`
+	mutation UpdateParent($oldMapId: String!, $newMapId: String!, $region: RegionInput!) {
+		updateParent(oldMapId: $oldMapId, newMapId: $newMapId, region: $region) {
+			_id
+			name
+			owner
+			regions {
+				_id
+				name
+				capital
+				leader
+				landmarks
+			}
+		}
+	}
+`;

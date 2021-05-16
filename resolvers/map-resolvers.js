@@ -188,6 +188,25 @@ module.exports = {
 			const updated = await Map.updateOne({_id: listId}, { regions: listItems });
 			if (updated) return (listItems);
 			else return (found.regions);
+		}, 
+
+		updateParent: async (_, args) => {
+			const { oldMapId, newMapId, region } = args;
+			console.log(region);
+			const oldId = new ObjectId(oldMapId);
+			const oldMap = await Map.findOne({_id: oldId});
+			let oldListRegions = oldMap.regions;
+			oldListRegions = oldListRegions.filter(item => item._id.toString() !== region._id);
+			const deleteOld = await Map.updateOne({_id: oldId}, { regions: oldListRegions });
+			const newId = new ObjectId(newMapId);
+			const newMap = await Map.findOne({_id: newId});
+			let newListRegions = newMap.regions;
+			newListRegions.push(region);
+			const addNew = await Map.updateOne({_id: newId}, {regions: newListRegions});
+			if (deleteOld && addNew) {
+				return newMap;
+			}
+			return oldMap;
 		}
 	}
 }

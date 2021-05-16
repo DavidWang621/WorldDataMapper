@@ -32,6 +32,20 @@ const RegionSpreadsheet = (props) => {
     const [deleteRegion]                    = useMutation(mutations.DELETE_REGION);
     const [sortRegion]                      = useMutation(mutations.SORT_REGION);
 
+    const keyCombination = (e, callback) => {
+		if(e.key === 'z' && e.ctrlKey) {
+			if(props.tps.hasTransactionToUndo()) {
+				tpsUndo();
+			}
+		}
+		else if (e.key === 'y' && e.ctrlKey) { 
+			if(props.tps.hasTransactionToRedo()) {
+				tpsRedo();
+			}
+		}
+	}
+	document.onkeydown = keyCombination;
+
     let regions = props.region.regions;
     let maps = [];
     const { loading, error, data, refetch } = useQuery(GET_DB_MAPS);

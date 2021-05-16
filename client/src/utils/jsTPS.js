@@ -154,6 +154,24 @@ export class EditLandmark_Transaction extends jsTPS_Transaction {
     }
 }
 
+// export class ChangeParent_Transaction extends jsTPS_Transaction {
+//     constructor(oldMapId, newMapId, region, updatefunc) {
+//         super();
+//         this.oldMapId = oldMapId;
+//         this.newMapId = newMapId;
+//         this.region = region;
+//         this.updateFunction = updatefunc;
+//     }
+//     async doTransaction() {
+//         const { data } = await this.updateFunction({variables: {oldMapId: this.oldMapId, newMapId: this.newMapId, region: this.region}});
+//         return data;
+//     }
+//     async undoTransaction() {
+//         const { data } = await this.updateFunction({variables: {oldMapId: this.newMapId, newMapId: this.oldMapId, region: this.region}}).catch(err=>console.log(JSON.stringify(err, null, 2)));
+//         return data;
+//     }
+// }
+
 
 
 export class jsTPS {

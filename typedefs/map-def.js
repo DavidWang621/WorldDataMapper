@@ -30,6 +30,7 @@ const typeDefs = gql `
 		addLandmark(mapId: String!, regionId: String!, value: String!, index: Int!): [Region]
 		deleteLandmark(mapId: String!, regionId: String!, value: String!): [Region]
 		updateLandmark(mapId: String!, regionId: String!, value: String!, oldValue: String!): [Region]
+		updateParent(oldMapId: String!, newMapId: String!, region: RegionInput!): Map
 	}
 	input MapInput {
 		_id: String

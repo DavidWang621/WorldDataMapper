@@ -9,7 +9,7 @@ import { useHistory }                                                   from 're
 import LandmarksTableContents                                           from './LandmarksTableContents';   
 import * as mutations 					                                from '../../../cache/mutations';               
 import WInput from 'wt-frontend/build/components/winput/WInput';
-import { AddLandmark_Transaction, DeleteLandmark_Transaction, EditLandmark_Transaction } from '../../../utils/jsTPS';
+import { AddLandmark_Transaction, ChangeParent_Transaction, DeleteLandmark_Transaction, EditLandmark_Transaction } from '../../../utils/jsTPS';
 
 const RegionViewer = (props) => {
 
@@ -19,10 +19,27 @@ const RegionViewer = (props) => {
     const [landmarkValue, setLandmarkValue] = useState('');
     const [canUndo, setCanUndo]             = useState(props.tps.hasTransactionToUndo());
 	const [canRedo, setCanRedo]             = useState(props.tps.hasTransactionToRedo());
+    const [editParent, toggleEditParent]    = useState(false);
+    const [currentParent, changeParentName] = useState(props.region.name);
 
     const [addLandmark]				        = useMutation(mutations.ADD_LANDMARK);
     const [deleteLandmark]                  = useMutation(mutations.DELETE_LANDMARK);
     const [updateLandmark]                  = useMutation(mutations.UPDATE_LANDMARK);
+    const [updateParent]                    = useMutation(mutations.UPDATE_PARENT);
+
+    const keyCombination = (e, callback) => {
+		if(e.key === 'z' && e.ctrlKey) {
+			if(props.tps.hasTransactionToUndo()) {
+				tpsUndo();
+			}
+		}
+		else if (e.key === 'y' && e.ctrlKey) { 
+			if(props.tps.hasTransactionToRedo()) {
+				tpsRedo();
+			}
+		}
+	}
+	document.onkeydown = keyCombination;
 
     const auth = props.user === null ? false : true;
 
@@ -43,9 +60,11 @@ const RegionViewer = (props) => {
 	}
 
     let maps = [];
-    let landmarks = []
+    let landmarks = [];
+    let allMaps = [];
     const { loading, error, data, refetch } = useQuery(GET_DB_MAPS);
     if (data) {
+        allMaps = data.getAllMaps;
         for(let map of data.getAllMaps) {
 			if (props.region._id === map._id) {
                 maps = map.regions;
@@ -80,7 +99,7 @@ const RegionViewer = (props) => {
 
     const moveToSheet = () => {
         props.toggleLandmark(true);
-        history.push("/maps/" + props.region.name)
+        history.push("/maps/" + currentParent);
     }
 
     const myChangeHandler = (e) => {
@@ -136,6 +155,35 @@ const RegionViewer = (props) => {
         tpsRedo();
     }
 
+    const handleParentChange = (e) => {
+        const { name, value } = e.target;
+        toggleEditParent(!editParent);
+        for (let map of allMaps) {
+            if (map.name === value) {
+                changeParent(value, map._id);
+            }
+        }
+    }
+
+    const changeParent = async (value, mapId) => {
+        changeParentName(value);
+        let region = {
+            _id: props.subregion._id,
+            name: props.subregion.name,
+            capital: props.subregion.capital,
+            leader: props.subregion.leader,
+            landmarks: landmarks
+        }
+        console.log(region);
+        // let transaction = new ChangeParent_Transaction(props.region._id, mapId, region, updateParent);
+        // props.tps.addTransaction(transaction);
+        // tpsRedo();
+        const { data } = updateParent({variables: {oldMapId: props.region._id, newMapId: mapId, region: region}});
+        if (data) {
+            console.log("Changed region");
+        }
+    }
+
     return (
         <WLayout wLayout="header-side">
             <>
@@ -183,11 +231,19 @@ const RegionViewer = (props) => {
                         <WCol size="3" className="viewerName">
                             Parent Region:
                         </WCol>
-                        <WCol size="2" className="nameViewer parentViewer" onClick={moveToSheet}>
-                            {props.region.name}
+                        <WCol size="2" className="nameViewer parentViewer">
+                            {
+                                editParent 
+                                ?
+                                <WInput onBlur={handleParentChange} defaultValue={currentParent} className="parentEdit"/>
+                                :
+                                <div onClick={moveToSheet}>
+                                    {currentParent}
+                                </div>
+                            }
                         </WCol>
                         <WCol size="1">
-                            <WButton wType="texted" clickAnimation={props.disabled ? "" : "ripple-light" } span={false}>
+                            <WButton wType="texted" clickAnimation={props.disabled ? "" : "ripple-light" } span={false} onClick={() => toggleEditParent(!editParent)}>
                                 <i className="material-icons">edit</i>
                             </WButton>
                         </WCol>
