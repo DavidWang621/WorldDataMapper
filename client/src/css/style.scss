@@ -3,7 +3,7 @@
     $background-color: rgb(64, 69, 78),//#d9d6cc,
     $navbar-background-color: #353a44,//rgb(64, 69, 78),
     $sidebar-background-color: #2b2e36,//#353a44,
-    $text-color: black,
+    $text-color: white,
     $modal-background: rgb(64, 69, 78),
     $modal-section-padding: 24px,
     $modal-radius: 4px,
@@ -361,4 +361,8 @@ html, body {
 
 .landmarkClose {
     color: red;
+}
+
+.viewerArrow {
+    color: white;
 }

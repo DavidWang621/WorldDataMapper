@@ -9,11 +9,12 @@ import * as mutations 					from '../../cache/mutations';
 import MapTableContent					from './MapContent/MapTableContents';
 import RegionSpreadsheet				from './MapContent/RegionSpreadsheet';
 import RegionViewer						from './MapContent/RegionViewer';
+import Confirm							from '../modals/Confirm';
 import { GET_DB_MAPS } 					from '../../cache/queries';
 import React, { useState } 				from 'react';
 import { useMutation, useQuery } 		from '@apollo/client';
 import { WNavbar, WSidebar, WNavItem } 	from 'wt-frontend';
-import { Route, Switch }						from 'react-router-dom';
+import { Route, Switch, useHistory }						from 'react-router-dom';
 import { WLayout, WLHeader, WLMain, WLSide, WButton } from 'wt-frontend';
 import { WRow, WCol } from 'wt-frontend';
 import { UpdateListField_Transaction, 
@@ -33,6 +34,9 @@ const Maps = (props) => {
 	const [showUpdate, toggleShowUpdate]	= useState(false);
 	const [mapSelect, toggleMapSelect]		= useState(true);
 	const [regionSet, setRegionSet] 		= useState({});
+	const [mapAdd, toggleMapAdd]			= useState(false);
+
+	let history = useHistory();
 
     const { loading, error, data, refetch } = useQuery(GET_DB_MAPS);
     // if(loading) { console.log(loading, 'loading'); }
@@ -78,10 +82,10 @@ const Maps = (props) => {
 		toggleShowUpdate(!showUpdate);	
 	};
 
-	const createNewMap = async () => {
+	const createNewMap = async (name) => {
 		let list = {
 			_id: '',
-			name: 'Untitled',
+			name: name,
 			owner: props.user._id,
 			regions: []
 		}
@@ -90,6 +94,15 @@ const Maps = (props) => {
 			console.log("Added new map");
 		}
 		refetch();
+		history.push("/maps/" + name);
+	}
+
+	const clickMap = () => {
+		toggleMapAdd(true);
+	}
+
+	const showMap = (value) => {
+		toggleMapAdd(value);
 	}
 
 	const updateMapField = async (_id, value) => {
@@ -116,6 +129,12 @@ const Maps = (props) => {
 		// }
 		setRegionSet(entry);
 		toggleMapSelect(false);
+		history.push("/maps/" + entry.name);
+	}
+
+	const moveSheet = (url) => {
+		console.log(url);
+		history.push(url);
 	}
 
     return (
@@ -152,7 +171,7 @@ const Maps = (props) => {
 			</div>
             <div className="rightSide">
                 <img src={globe} alt="globe" className="mapGlobe"/>
-                <WButton className="newMapButton" span="true" clickAnimation="ripple-light" hoverAnimation="darken" color="danger" raised="false" onClick={createNewMap}>
+                <WButton className="newMapButton" span="true" clickAnimation="ripple-light" hoverAnimation="darken" color="danger" raised="false" onClick={clickMap}>
                     Create New Map
                 </WButton>
             </div>
@@ -164,10 +183,15 @@ const Maps = (props) => {
 				// path={"/maps/" + tempRegion.name}
 				path={"/maps/" + regionSet.name}
 				name={"region" + regionSet.name}
-				render={() => <RegionSpreadsheet tps={props.tps} user={props.user} fetchUser={props.fetchUser} region={regionSet} toggleMapSelect={toggleMapSelect} reloadMap={refetch} regionInfo={regionSet}/>}
+				render={() => <RegionSpreadsheet tps={props.tps} user={props.user} fetchUser={props.fetchUser} region={regionSet} 
+				toggleMapSelect={toggleMapSelect} reloadMap={refetch} regionInfo={regionSet} moveSheet={moveSheet}/>}
 			>
 			</Route>
 			</>
+			}
+
+			{
+				mapAdd && <Confirm mapAdd={mapAdd} setShowAdd={showMap} addMap={createNewMap}/>
 			}
 
 			{

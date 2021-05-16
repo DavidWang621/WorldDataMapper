@@ -99,7 +99,8 @@ const RegionViewer = (props) => {
 
     const moveToSheet = () => {
         props.toggleLandmark(true);
-        history.push("/maps/" + currentParent);
+        // history.push("/maps/" + currentParent);
+        props.moveSheet("/maps/" + currentParent);
     }
 
     const myChangeHandler = (e) => {
@@ -166,7 +167,6 @@ const RegionViewer = (props) => {
     }
 
     const changeParent = async (value, mapId) => {
-        changeParentName(value);
         let region = {
             _id: props.subregion._id,
             name: props.subregion.name,
@@ -174,13 +174,55 @@ const RegionViewer = (props) => {
             leader: props.subregion.leader,
             landmarks: landmarks
         }
-        console.log(region);
-        // let transaction = new ChangeParent_Transaction(props.region._id, mapId, region, updateParent);
-        // props.tps.addTransaction(transaction);
-        // tpsRedo();
-        const { data } = updateParent({variables: {oldMapId: props.region._id, newMapId: mapId, region: region}});
-        if (data) {
-            console.log("Changed region");
+        // // let transaction = new ChangeParent_Transaction(props.region._id, mapId, region, updateParent);
+        // // props.tps.addTransaction(transaction);
+        // // tpsRedo();
+        // const { data } = updateParent({variables: {oldMapId: props.region._id, newMapId: mapId, region: region}});
+        // if (data) {
+        //     console.log("Changed region");
+        // }
+        props.changeParentField(props.region._id, mapId, region);
+        changeParentName(value);
+        // history.push("/maps/" + currentParent);
+    }
+
+    const goBack = () => {
+        console.log(props.subregion);
+        let index = -1;
+        for (let i = 0; i < maps.length; i++) {
+            if (maps[i]._id === props.subregion._id) {
+                index = i;
+            }
+        }
+        if (index > 0) {
+            let temp = null;
+            for (let i = 0; i < maps.length; i++) {
+                if (i === index - 1) {
+                    temp = maps[i];
+                }
+            }
+            props.goBackward(temp);
+        }
+    }
+
+    const goForward = () => {
+        console.log(props.subregion);
+        let index = -1;
+        for (let i = 0; i < maps.length; i++) {
+            if (maps[i]._id === props.subregion._id) {
+                index = i;
+            }
+        }
+        console.log(index);
+        console.log(maps.length);
+        if (index < maps.length-1) {
+            let temp = null;
+            for (let i = 0; i < maps.length; i++) {
+                if (i === index + 1) {
+                    temp = maps[i];
+                }
+            }
+            props.goForward(temp);
         }
     }
 
@@ -194,6 +236,19 @@ const RegionViewer = (props) => {
 							<Logo className='logo' toggleMap={props.toggleMap} user={props.user} tps={props.tps}/>
 						</WNavItem>
 					</ul>
+                    <ul>
+                        <div className="parentRegion">
+                            {props.region.name}  {">"}  {props.subregion.name}
+                        </div>
+                    </ul>
+                    <ul>
+                        <WButton className="viewerArrow" wType="texted" clickAnimation={props.disabled ? "" : "ripple-light" } onClick={goBack}>
+                            <i className="material-icons">arrow_back</i>
+                        </WButton>
+                        <WButton className="viewerArrow" wType="texted" clickAnimation={props.disabled ? "" : "ripple-light" } onClick={goForward}>
+                            <i className="material-icons">arrow_forward</i>
+                        </WButton>
+                    </ul>
 					<ul>
 						<NavbarOptions
 							fetchUser={props.fetchUser} 	auth={auth} 

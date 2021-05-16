@@ -14,7 +14,7 @@ const RegionEntry = (props) => {
 
     const goToViewer = () => {
         props.tps.clearAllTransactions();
-        history.push("/maps/" + props.region.name + "/" + props.region._id);
+        // history.push("/maps/" + props.region.name + "/" + props.region._id);
         props.handleSelectViewer(props.entry);
     }
 

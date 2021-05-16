@@ -24,7 +24,7 @@ const MapTableEntry = (props) => {
     const selectMap = (e) => {
         props.handleSelectMap(props.entry);
         // history.push("/maps/" + props.name);
-        history.push("/maps/" + props.name);
+        // history.push("/maps/" + props.name);
     }
 
     const editMap = () => {

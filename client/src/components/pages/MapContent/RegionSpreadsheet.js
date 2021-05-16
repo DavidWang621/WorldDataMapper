@@ -9,7 +9,7 @@ import UpdateAccount                                    from '../../modals/Updat
 import RegionTableContents                              from './RegionTableContents';
 import * as mutations 					                from '../../../cache/mutations';
 import RegionViewer                                     from './RegionViewer';
-import { Route }                                        from 'react-router-dom';
+import { Route, useHistory }                            from 'react-router-dom';
 import { AddListItems_Transaction, 
     EditListItems_Transaction, 
     SortListItems_Transaction, 
@@ -31,6 +31,9 @@ const RegionSpreadsheet = (props) => {
     const [updateRegion]                    = useMutation(mutations.UPDATE_REGION);
     const [deleteRegion]                    = useMutation(mutations.DELETE_REGION);
     const [sortRegion]                      = useMutation(mutations.SORT_REGION);
+    const [updateParent]                    = useMutation(mutations.UPDATE_PARENT);
+
+    let history = useHistory();
 
     const keyCombination = (e, callback) => {
 		if(e.key === 'z' && e.ctrlKey) {
@@ -48,11 +51,13 @@ const RegionSpreadsheet = (props) => {
 
     let regions = props.region.regions;
     let maps = [];
+    let wholeMap = []
     const { loading, error, data, refetch } = useQuery(GET_DB_MAPS);
     if (data) {
         for(let map of data.getAllMaps) {
 			if (props.region._id === map._id) {
                 maps = map.regions;
+                wholeMap = map;
             }
 		}
     }
@@ -174,9 +179,29 @@ const RegionSpreadsheet = (props) => {
 		return true;
     }
 
+    const changeParentField = async (oldMapId, newMapId, region) => {
+        const { data } = updateParent({variables: {oldMapId: oldMapId, newMapId: newMapId, region: region}});
+        if (data) {
+            console.log("Changed region");
+        }
+        // history.push("/maps/" + props.region.name + "/" + props.region._id);
+    }
+
     const selectLandmark = (entry) => {
         toggleRegionEntry(entry);
         toggleLandmarkSelect(false);
+        history.push("/maps/" + wholeMap.name + "/" + entry.name);
+    }
+
+    const goBack = (region) => {
+        console.log(region);
+        history.push("/maps/" + wholeMap.name + "/" + region.name);
+    }
+
+    const goForth = (region) => {
+        console.log(region);
+        history.goBack();
+        history.push("/maps/" + wholeMap.name + "/" + region.name);
     }
 
     return (
@@ -193,6 +218,11 @@ const RegionSpreadsheet = (props) => {
 							<Logo className='logo' toggleMap={props.toggleMapSelect} user={props.user} tps={props.tps}/>
 						</WNavItem>
 					</ul>
+                    <ul>
+                        <div className="parentRegion">
+                            {wholeMap.name}
+                        </div>
+                    </ul>
 					<ul>
 						<NavbarOptions
 							fetchUser={props.fetchUser} 	auth={auth} 
@@ -247,10 +277,12 @@ const RegionSpreadsheet = (props) => {
             :
             <Route
 				// path={"/maps/" + tempRegion.name}
-				path={"/maps/" + props.regionInfo.name + "/" + props.regionInfo._id}
-				name={"region" + props.regionInfo.name}
+				path={"/maps/" + wholeMap.name + "/" + regionEntry.name}
+				name={"region" + regionEntry.name}
 				render={() => <RegionViewer reload={refetch} user={props.user} fetchUser={props.fetchUser} 
-                toggleMap={props.toggleMapSelect} region={props.region} subregion={regionEntry} toggleLandmark={toggleLandmarkSelect} tps={props.tps} />}
+                toggleMap={props.toggleMapSelect} region={props.region} subregion={regionEntry} 
+                toggleLandmark={toggleLandmarkSelect} tps={props.tps} changeParentField={changeParentField}
+                moveSheet={props.moveSheet} goBackward={goBack} goForward={goForth}/>}
 			>
 			</Route>
             }
