@@ -3,6 +3,7 @@ import { WButton, WLayout, WLHeader, WNavbar, WNavItem, WRow, WCol}     from 'wt
 import Logo 							                                from '../../navbar/Logo';
 import NavbarOptions                                                    from '../../navbar/NavbarOptions';
 import UpdateAccount                                                    from '../../modals/UpdateAccount';
+import Delete                                                           from '../../modals/Delete';
 import { useMutation, useQuery } 		                                from '@apollo/client';
 import { GET_DB_MAPS } 					                                from '../../../cache/queries';
 import { useHistory }                                                   from 'react-router-dom'  
@@ -21,6 +22,8 @@ const RegionViewer = (props) => {
 	const [canRedo, setCanRedo]             = useState(props.tps.hasTransactionToRedo());
     const [editParent, toggleEditParent]    = useState(false);
     const [currentParent, changeParentName] = useState(props.region.name);
+    const [mapDelete, setMapDelete]         = useState(false);
+    const [deleteValue, SetDeleteValue]     = useState('');
 
     const [addLandmark]				        = useMutation(mutations.ADD_LANDMARK);
     const [deleteLandmark]                  = useMutation(mutations.DELETE_LANDMARK);
@@ -186,6 +189,15 @@ const RegionViewer = (props) => {
         // history.push("/maps/" + currentParent);
     }
 
+    const setShowDelete = (value) => {
+        setMapDelete(value);
+    }
+
+    const mapDel = (value) => {
+        SetDeleteValue(value);
+        setMapDelete(true);
+    }
+
     const goBack = () => {
         console.log(props.subregion);
         let index = -1;
@@ -333,7 +345,7 @@ const RegionViewer = (props) => {
                 </div>
                 <div className="rightViewer">
                     <div className="landmarksContent">
-                        <LandmarksTableContents landmarks={landmarks} deleteLandmark={deleteLandmarkField} updateLandmark={updateLandmarkField}/>
+                        <LandmarksTableContents landmarks={landmarks} deleteLandmark={mapDel} updateLandmark={updateLandmarkField}/>
                     </div>
                     <div className="addLandmark">
                         <WButton wType="texted" clickAnimation={props.disabled ? "" : "ripple-light" } className="addLandmarkButton" onClick={addLandmarkField}>
@@ -344,6 +356,11 @@ const RegionViewer = (props) => {
                 </div>
             </div>
             </>
+            
+            {
+                mapDelete && <Delete mapDelete={mapDelete} setShowDelete={setShowDelete} activeid={deleteValue} deleteList={deleteLandmarkField}/>
+            }
+
             {
                 showUpdate && <UpdateAccount fetchUser={props.fetchUser} setShowUpdate={setShowUpdate} user={props.user}/>
             }
