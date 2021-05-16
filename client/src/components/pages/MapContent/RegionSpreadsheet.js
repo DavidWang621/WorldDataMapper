@@ -6,6 +6,7 @@ import NavbarOptions                                    from '../../navbar/Navba
 import { useMutation, useQuery } 		                from '@apollo/client';
 import { GET_DB_MAPS } 					                from '../../../cache/queries';
 import UpdateAccount                                    from '../../modals/UpdateAccount';
+import Delete                                           from '../../modals/Delete';
 import RegionTableContents                              from './RegionTableContents';
 import * as mutations 					                from '../../../cache/mutations';
 import RegionViewer                                     from './RegionViewer';
@@ -26,6 +27,8 @@ const RegionSpreadsheet = (props) => {
     const [regionEntry, toggleRegionEntry]          = useState({});
     const [canUndo, setCanUndo]                     = useState(props.tps.hasTransactionToUndo());
 	const [canRedo, setCanRedo]                     = useState(props.tps.hasTransactionToRedo());
+    const [mapDelete, setMapDelete]                 = useState(false);
+    const [deleteId, setDeleteId]                   = useState('');
 
     const [addRegion]				        = useMutation(mutations.ADD_REGION);
     const [updateRegion]                    = useMutation(mutations.UPDATE_REGION);
@@ -155,6 +158,15 @@ const RegionSpreadsheet = (props) => {
         // props.reloadMap();
     }
 
+    const setShowDelete = (value) => {
+        setMapDelete(value);
+    }
+
+    const mapDel = (itemId) => {
+        setDeleteId(itemId);
+        setMapDelete(true);
+    }
+
     const sortRegionField = async (field) => {
         const itemToSort = maps;
         let order = isInIncreasingOrder(itemToSort, field);
@@ -271,7 +283,7 @@ const RegionSpreadsheet = (props) => {
             <div className="regionSection">
                 <RegionTableContents region={maps} regionInfo={props.regionInfo}    
                 handleSelectViewer={selectLandmark} updateRegion={updateRegionField}
-                deleteRegion={deleteRegionField} tps={props.tps}/>
+                deleteRegion={mapDel} tps={props.tps}/>
             </div>
             </>
             :
@@ -285,6 +297,10 @@ const RegionSpreadsheet = (props) => {
                 moveSheet={props.moveSheet} goBackward={goBack} goForward={goForth}/>}
 			>
 			</Route>
+            }
+
+            {
+                mapDelete && <Delete mapDelete={mapDelete} activeid={deleteId} deleteList={deleteRegionField} setShowDelete={setShowDelete}/>
             }
 
             {
