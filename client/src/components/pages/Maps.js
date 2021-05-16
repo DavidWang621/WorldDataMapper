@@ -1,7 +1,6 @@
 import Logo 							from '../navbar/Logo';
 import globe 							from '../../pictures/globeRed.jpg';
 import Login 							from '../modals/Login';
-import Delete 							from '../modals/Delete';
 import UpdateAccount					from '../modals/UpdateAccount';
 import CreateAccount 					from '../modals/CreateAccount';						
 import NavbarOptions 					from '../navbar/NavbarOptions';
@@ -10,6 +9,7 @@ import MapTableContent					from './MapContent/MapTableContents';
 import RegionSpreadsheet				from './MapContent/RegionSpreadsheet';
 import RegionViewer						from './MapContent/RegionViewer';
 import Confirm							from '../modals/Confirm';
+import Delete                           from '../modals/Delete';
 import { GET_DB_MAPS } 					from '../../cache/queries';
 import React, { useState } 				from 'react';
 import { useMutation, useQuery } 		from '@apollo/client';
@@ -35,6 +35,8 @@ const Maps = (props) => {
 	const [mapSelect, toggleMapSelect]		= useState(true);
 	const [regionSet, setRegionSet] 		= useState({});
 	const [mapAdd, toggleMapAdd]			= useState(false);
+	const [mapDelete, toggleMapDelete]		= useState(false);
+	const [Id, deleteMapId]					= useState('');
 
 	let history = useHistory();
 
@@ -105,6 +107,10 @@ const Maps = (props) => {
 		toggleMapAdd(value);
 	}
 
+	const showDeleteMap = (value) => {
+		toggleMapDelete(value);
+	}
+
 	const updateMapField = async (_id, value) => {
 		const { data } = await updateMap({ variables : { _id: _id, value: value } });
 		if (data) {
@@ -119,6 +125,11 @@ const Maps = (props) => {
 			console.log("Deleted map");
 		}
 		refetch();
+	}
+
+	const mapDel = async (_id) => {
+		deleteMapId(_id);
+		toggleMapDelete(true);
 	}
 
 	const selectMap = async (entry) => {
@@ -166,7 +177,7 @@ const Maps = (props) => {
             <div className="mapTableContent">
 				<MapTableContent 
 					maplist={maplists}		updateMap={updateMapField}	reloadMap={refetch}
-					deleteMap={deleteMapField}		handleSelectMap={selectMap}
+					deleteMap={mapDel}		handleSelectMap={selectMap}
 				/>
 			</div>
             <div className="rightSide">
@@ -188,6 +199,10 @@ const Maps = (props) => {
 			>
 			</Route>
 			</>
+			}
+
+			{
+				mapDelete && <Delete mapDelete={mapDelete} setShowDelete={showDeleteMap} deleteList={deleteMapField} activeid={Id}/>
 			}
 
 			{
