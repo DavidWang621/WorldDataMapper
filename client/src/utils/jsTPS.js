@@ -95,6 +95,65 @@ export class DeleteListItems_Transaction extends jsTPS_Transaction {
     }
 }
 
+export class AddLandmark_Transaction extends jsTPS_Transaction {
+    constructor(mapId, regionId, value, index=-1, addfunc, delfunc) {
+        super();
+        this.mapId = mapId;
+        this.regionId = regionId;
+        this.value = value;
+        this.index = index;
+        this.addFunction = addfunc;
+        this.delFunction = delfunc;
+    }
+    async doTransaction() {
+        const { data } = await this.addFunction({variables: {mapId: this.mapId, regionId: this.regionId, value: this.value, index: this.index}});
+        return data;
+    }
+    async undoTransaction() {
+        const { data } = await this.delFunction({variables: {mapId: this.mapId, regionId: this.regionId, value: this.value}});
+        return data;
+    }
+}
+
+export class DeleteLandmark_Transaction extends jsTPS_Transaction {
+    constructor(mapId, regionId, value, index, addfunc, delfunc) {
+        super();
+        this.mapId = mapId;
+        this.regionId = regionId;
+        this.value = value;
+        this.index = index;
+        this.addFunction = addfunc;
+        this.delFunction = delfunc;
+    }
+    async doTransaction() {
+        const { data } = await this.delFunction({variables: {mapId: this.mapId, regionId: this.regionId, value: this.value}});
+        return data;
+    }
+    async undoTransaction() {
+        const { data } = await this.addFunction({variables: {mapId: this.mapId, regionId: this.regionId, value: this.value, index: this.index}});
+        return data;
+    }
+}
+
+export class EditLandmark_Transaction extends jsTPS_Transaction {
+    constructor(mapId, regionId, value, oldValue, editfunc) {
+        super();
+        this.mapId = mapId;
+        this.regionId = regionId;
+        this.value = value;
+        this.oldValue = oldValue;
+        this.editFunction = editfunc;
+    }
+    async doTransaction() {
+        const { data } = await this.editFunction({variables: {mapId: this.mapId, regionId: this.regionId, value: this.value, oldValue: this.oldValue}});
+        return data;
+    }
+    async undoTransaction() {
+        const { data } = await this.editFunction({variables: {mapId: this.mapId, regionId: this.regionId, value: this.oldValue, oldValue: this.value}});
+        return data;
+    }
+}
+
 
 
 export class jsTPS {

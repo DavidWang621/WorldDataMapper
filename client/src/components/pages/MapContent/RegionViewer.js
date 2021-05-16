@@ -9,6 +9,7 @@ import { useHistory }                                                   from 're
 import LandmarksTableContents                                           from './LandmarksTableContents';   
 import * as mutations 					                                from '../../../cache/mutations';               
 import WInput from 'wt-frontend/build/components/winput/WInput';
+import { AddLandmark_Transaction, DeleteLandmark_Transaction, EditLandmark_Transaction } from '../../../utils/jsTPS';
 
 const RegionViewer = (props) => {
 
@@ -16,12 +17,30 @@ const RegionViewer = (props) => {
 	const [showCreate, toggleShowCreate] 	= useState(false);
 	const [showUpdate, toggleShowUpdate]	= useState(false);
     const [landmarkValue, setLandmarkValue] = useState('');
+    const [canUndo, setCanUndo]             = useState(props.tps.hasTransactionToUndo());
+	const [canRedo, setCanRedo]             = useState(props.tps.hasTransactionToRedo());
 
     const [addLandmark]				        = useMutation(mutations.ADD_LANDMARK);
     const [deleteLandmark]                  = useMutation(mutations.DELETE_LANDMARK);
     const [updateLandmark]                  = useMutation(mutations.UPDATE_LANDMARK);
 
     const auth = props.user === null ? false : true;
+
+    const tpsUndo = async () => {
+		const ret = await props.tps.undoTransaction();
+		if(ret) {
+			setCanUndo(props.tps.hasTransactionToUndo());
+			setCanRedo(props.tps.hasTransactionToRedo());
+		}
+	}
+
+	const tpsRedo = async () => {
+		const ret = await props.tps.doTransaction();
+		if(ret) {
+			setCanUndo(props.tps.hasTransactionToUndo());
+			setCanRedo(props.tps.hasTransactionToRedo());
+		}
+	}
 
     let maps = [];
     let landmarks = []
@@ -71,32 +90,50 @@ const RegionViewer = (props) => {
     const addLandmarkField = async () => {
         if (landmarkValue !== '') {
             setLandmarkValue('');
-            console.log(props.region._id);
-            console.log(props.subregion._id);
-            console.log(landmarkValue);
-            const { data } = await addLandmark({variables: {mapId: props.region._id, regionId: props.subregion._id, value: landmarkValue, index: -1}});
-            if (data) {
-                console.log("Updated landmark", data);
-            }
+            // console.log(props.region._id);
+            // console.log(props.subregion._id);
+            // console.log(landmarkValue);
+            // const { data } = await addLandmark({variables: {mapId: props.region._id, regionId: props.subregion._id, value: landmarkValue, index: -1}});
+            // if (data) {
+            //     console.log("Updated landmark", data);
+            // }
+            // console.log(props.region._id);
+            // console.log(props.subregion._id);
+            // console.log(landmarkValue);
+            let transaction = new AddLandmark_Transaction(props.region._id, props.subregion._id, landmarkValue, -1, addLandmark, deleteLandmark);
+            props.tps.addTransaction(transaction);
+            tpsRedo();
         }
     }
 
     const deleteLandmarkField = async (value) => {
-        const { data } = await deleteLandmark({variables: {mapId: props.region._id, regionId: props.subregion._id, value: value}});
-        if (data) {
-            console.log("Deleted landmark", data);
+        let index = -1;
+        for (let i = 0; i < landmarks.length; i++) {
+            if (landmarks[i] === value) {
+                index = i;
+            }
         }
+        // const { data } = await deleteLandmark({variables: {mapId: props.region._id, regionId: props.subregion._id, value: value}});
+        // if (data) {
+        //     console.log("Deleted landmark", data);
+        // }
+        let transaction = new DeleteLandmark_Transaction(props.region._id, props.subregion._id, value, index, addLandmark, deleteLandmark);
+        props.tps.addTransaction(transaction);
+        tpsRedo();
     }
 
     const updateLandmarkField = async (value, oldValue) => {
-        console.log(props.region._id);
-        console.log("regionId", props.subregion._id);
-        console.log(value);
-        console.log(oldValue);
-        const { data } = await updateLandmark({variables: {mapId: props.region._id, regionId: props.subregion._id, value: value, oldValue: oldValue}});
-        if (data) {
-            console.log("Updated landmark", data);
-        }
+        // console.log(props.region._id);
+        // console.log("regionId", props.subregion._id);
+        // console.log(value);
+        // console.log(oldValue);
+        // const { data } = await updateLandmark({variables: {mapId: props.region._id, regionId: props.subregion._id, value: value, oldValue: oldValue}});
+        // if (data) {
+        //     console.log("Updated landmark", data);
+        // }
+        let transaction = new EditLandmark_Transaction(props.region._id, props.subregion._id, value, oldValue, updateLandmark);
+        props.tps.addTransaction(transaction);
+        tpsRedo();
     }
 
     return (
@@ -119,10 +156,10 @@ const RegionViewer = (props) => {
 					</ul>
 				</WNavbar>
                 <div className="viewerTop">
-                    <WButton className="viewerUndoRedo" wType="texted" clickAnimation={props.disabled ? "" : "ripple-light" }>
+                    <WButton className="viewerUndoRedo" wType="texted" clickAnimation={props.disabled ? "" : "ripple-light" } onClick={tpsUndo}>
                         <i className="material-icons">undo</i>
                     </WButton>
-                    <WButton className="viewerUndoRedo" wType="texted" clickAnimation={props.disabled ? "" : "ripple-light" }>
+                    <WButton className="viewerUndoRedo" wType="texted" clickAnimation={props.disabled ? "" : "ripple-light" } onClick={tpsRedo}>
                         <i className="material-icons">redo</i>
                     </WButton>
                     <div className="regionLandmarkTitle">
