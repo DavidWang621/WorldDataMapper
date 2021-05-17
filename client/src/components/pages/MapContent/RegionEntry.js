@@ -1,4 +1,4 @@
-import React, { useState }                              from 'react';
+import React, { useState, useEffect }                   from 'react';
 import { WNavItem, WInput, WButton, WRow, WCol }        from 'wt-frontend';
 import { useHistory }                                   from 'react-router-dom';
 
@@ -7,6 +7,44 @@ const RegionEntry = (props) => {
     const [editCapital, toggleEditCapital] = useState(false);
     const [editLeader, toggleEditLeader] = useState(false);
     let history = useHistory();
+
+    // const keyCombination = (e) => {
+	// 	if(e.keyCode == 37) {
+    //         console.log(editCapital);
+    //         if (editCapital) {
+    //             console.log(e.target.value);
+    //         }
+	// 	}
+	// 	else if (e.keyCode === 37 && editLeader) { 
+	// 		console.log(e.target.value);
+	// 	}
+	// }
+	// document.onkeydown = keyCombination;
+
+    const pressKey = (e) => {
+		if (e.keyCode === 37 && editCapital) {
+			console.log(e.target.value);
+            handleCapitalSubmit(e);
+            toggleEditName(!editName);
+		} else if (e.keyCode === 37 && editLeader) {
+			console.log(e.target.value);
+            handleLeaderSubmit(e);
+            toggleEditCapital(!editCapital)
+		} else if (e.keyCode === 39 && editName) {
+            console.log(e.target.value);
+            handleNameSubmit(e);
+            toggleEditCapital(!editCapital);
+        } else if (e.keyCode === 39 && editCapital) {
+            console.log(e.target.value);
+            handleCapitalSubmit(e);
+            toggleEditLeader(!editLeader);
+        }
+	}
+
+	useEffect(() => {
+		document.addEventListener("keydown", pressKey);
+		return () => document.removeEventListener("keydown", pressKey);
+	});
 
     const deleteSubRegion = () => {
         props.deleteRegion(props._id);
