@@ -102,6 +102,7 @@ const RegionViewer = (props) => {
 
     const moveToSheet = () => {
         props.toggleLandmark(true);
+        // props.mapSelect(true);
         // history.push("/maps/" + currentParent);
         props.moveSheet("/maps/" + currentParent);
     }
@@ -186,7 +187,7 @@ const RegionViewer = (props) => {
         // }
         props.changeParentField(props.region._id, mapId, region);
         changeParentName(value);
-        // history.push("/maps/" + currentParent);
+        // history.push("/maps/" + value + "/" + props.subregion.name);
     }
 
     const setShowDelete = (value) => {
@@ -214,6 +215,7 @@ const RegionViewer = (props) => {
                 }
             }
             props.goBackward(temp);
+            props.toggleRegion(temp);
         }
     }
 
@@ -235,6 +237,7 @@ const RegionViewer = (props) => {
                 }
             }
             props.goForward(temp);
+            props.toggleRegion(temp);
         }
     }
 

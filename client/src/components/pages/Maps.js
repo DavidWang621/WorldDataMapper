@@ -148,6 +148,7 @@ const Maps = (props) => {
 		history.push(url);
 	}
 
+
     return (
 		<WLayout wLayout="header-side">
 			{
@@ -195,7 +196,7 @@ const Maps = (props) => {
 				path={"/maps/" + regionSet.name}
 				name={"region" + regionSet.name}
 				render={() => <RegionSpreadsheet tps={props.tps} user={props.user} fetchUser={props.fetchUser} region={regionSet} 
-				toggleMapSelect={toggleMapSelect} reloadMap={refetch} regionInfo={regionSet} moveSheet={moveSheet}/>}
+				toggleMapSelect={toggleMapSelect} reloadMap={refetch} regionInfo={regionSet} moveSheet={moveSheet} mapSelect={toggleMapSelect} setRegion={setRegionSet}/>}
 			>
 			</Route>
 			</>

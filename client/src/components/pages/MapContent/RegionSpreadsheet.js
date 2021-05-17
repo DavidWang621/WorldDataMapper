@@ -196,11 +196,12 @@ const RegionSpreadsheet = (props) => {
         if (data) {
             console.log("Changed region");
         }
-        // history.push("/maps/" + props.region.name + "/" + props.region._id);
+        history.push("/maps/" + props.region.name);
     }
 
     const selectLandmark = (entry) => {
         toggleRegionEntry(entry);
+        console.log(entry);
         toggleLandmarkSelect(false);
         history.push("/maps/" + wholeMap.name + "/" + entry.name);
     }
@@ -212,10 +213,11 @@ const RegionSpreadsheet = (props) => {
 
     const goForth = (region) => {
         console.log(region);
-        history.goBack();
         history.push("/maps/" + wholeMap.name + "/" + region.name);
     }
 
+    console.log(regionEntry);
+ 
     return (
         <WLayout wLayout="header-side">
             {
@@ -294,7 +296,7 @@ const RegionSpreadsheet = (props) => {
 				render={() => <RegionViewer reload={refetch} user={props.user} fetchUser={props.fetchUser} 
                 toggleMap={props.toggleMapSelect} region={props.region} subregion={regionEntry} 
                 toggleLandmark={toggleLandmarkSelect} tps={props.tps} changeParentField={changeParentField}
-                moveSheet={props.moveSheet} goBackward={goBack} goForward={goForth}/>}
+                moveSheet={props.moveSheet} goBackward={goBack} goForward={goForth} mapSelect={props.mapSelect} setRegion={props.setRegion} toggleRegion={toggleRegionEntry}/>}
 			>
 			</Route>
             }
