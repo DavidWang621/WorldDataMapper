@@ -241,6 +241,32 @@ const RegionViewer = (props) => {
         }
     }
 
+    const checkBackLength = () => {
+        let index = -1;
+        for (let i = 0; i < maps.length; i++) {
+            if (maps[i]._id === props.subregion._id) {
+                index = i;
+            }
+        }
+        if (index <= 0) {
+            return false;
+        }
+        return true;
+    }
+
+    const checkForwardLength = () => {
+        let index = -1;
+        for (let i = 0; i < maps.length; i++) {
+            if (maps[i]._id === props.subregion._id) {
+                index = i;
+            }
+        }
+        if (index >= maps.length-1) {
+            return false;
+        }
+        return true;
+    }
+
     return (
         <WLayout wLayout="header-side">
             <>
@@ -257,10 +283,10 @@ const RegionViewer = (props) => {
                         </div>
                     </ul>
                     <ul>
-                        <WButton className="viewerArrow" wType="texted" clickAnimation={props.disabled ? "" : "ripple-light" } onClick={goBack}>
+                        <WButton className="viewerArrow" disabled={!checkBackLength()}wType="texted" clickAnimation={props.disabled ? "" : "ripple-light" } onClick={goBack}>
                             <i className="material-icons">arrow_back</i>
                         </WButton>
-                        <WButton className="viewerArrow" wType="texted" clickAnimation={props.disabled ? "" : "ripple-light" } onClick={goForward}>
+                        <WButton className="viewerArrow" disabled={!checkForwardLength()} wType="texted" clickAnimation={props.disabled ? "" : "ripple-light" } onClick={goForward}>
                             <i className="material-icons">arrow_forward</i>
                         </WButton>
                     </ul>
@@ -274,10 +300,10 @@ const RegionViewer = (props) => {
 					</ul>
 				</WNavbar>
                 <div className="viewerTop">
-                    <WButton className="viewerUndoRedo" wType="texted" clickAnimation={props.disabled ? "" : "ripple-light" } onClick={tpsUndo}>
+                    <WButton className="viewerUndoRedo" disabled={!props.tps.hasTransactionToUndo() } wType="texted" clickAnimation={props.disabled ? "" : "ripple-light" } onClick={tpsUndo}>
                         <i className="material-icons">undo</i>
                     </WButton>
-                    <WButton className="viewerUndoRedo" wType="texted" clickAnimation={props.disabled ? "" : "ripple-light" } onClick={tpsRedo}>
+                    <WButton className="viewerUndoRedo" disabled={!props.tps.hasTransactionToRedo()} wType="texted" clickAnimation={props.disabled ? "" : "ripple-light" } onClick={tpsRedo}>
                         <i className="material-icons">redo</i>
                     </WButton>
                     <div className="regionLandmarkTitle">

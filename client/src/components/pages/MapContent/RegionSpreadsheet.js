@@ -216,7 +216,6 @@ const RegionSpreadsheet = (props) => {
         history.push("/maps/" + wholeMap.name + "/" + region.name);
     }
 
-    console.log(regionEntry);
  
     return (
         <WLayout wLayout="header-side">
@@ -250,10 +249,10 @@ const RegionSpreadsheet = (props) => {
                 <WButton className="regionAdd" wType="texted" clickAnimation={props.disabled ? "" : "ripple-light" } onClick={addSubRegion}>
                         <i className="material-icons">add</i>
                 </WButton>
-                <WButton className="regionUndoRedo" wType="texted" clickAnimation={props.disabled ? "" : "ripple-light" } onClick={tpsUndo}>
+                <WButton className="regionUndoRedo" disabled={!props.tps.hasTransactionToUndo()} wType="texted" clickAnimation={props.disabled ? "" : "ripple-light" } onClick={tpsUndo}>
                     <i className="material-icons">undo</i>
                 </WButton>
-                <WButton className="regionUndoRedo" wType="texted" clickAnimation={props.disabled ? "" : "ripple-light" } onClick={tpsRedo}>
+                <WButton className="regionUndoRedo" disabled={!props.tps.hasTransactionToRedo()} wType="texted" clickAnimation={props.disabled ? "" : "ripple-light" } onClick={tpsRedo}>
                     <i className="material-icons">redo</i>
                 </WButton>
                 <div className="regionArea">
