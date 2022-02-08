@@ -1,4 +1,4 @@
-# WorlddataMapper
+# WorldDataMapper
 
 ## VIP Application Platform
 
